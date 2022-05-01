@@ -1,3 +1,5 @@
 /coverage/*
 /doc/*
 /_doc/*
+/lib/*
+/src/importer.js

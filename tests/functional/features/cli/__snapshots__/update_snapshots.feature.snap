@@ -1,0 +1,13 @@
+
+
+exports[`Should echo salut1 1.1`] = `"salut1
+"`;
+
+exports[`Should echo salut1 1.3`] = `"salut1
+"`;
+
+exports[`Should echo salut2 1.1`] = `"salut2
+"`;
+
+exports[`Should echo salut2 1.4`] = `"salut2
+"`;

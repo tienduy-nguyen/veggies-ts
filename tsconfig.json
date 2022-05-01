@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "typeRoots": ["./node_modules/@types", "src/@types"],
+        "types": ["node", "jest", "chai"],
+        "incremental": true,
+        "noImplicitAny": true,
+        "allowJs": true,
+        "target": "es2019",
+        "module": "commonjs",
+        "lib": ["es2020"],
+        "alwaysStrict": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictFunctionTypes": false
+    },
+    "include": ["src/**/*.ts", "tests/**/*.ts", "examples/**/*.ts"],
+    "exclude": [],
+    "files": ["src/@types/chai.d.ts"]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-const { run } = require('../src/cli')
+const { run } = require('../lib/cli/index')
 
 run(process.argv)

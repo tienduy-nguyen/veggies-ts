@@ -13,6 +13,8 @@ Veggies is an awesome cucumberjs library for API/CLI testing.
 Great for testing APIs built upon Express, Koa, HAPI, Loopback and others.
 It's also the perfect companion for testing CLI applications built with commander, meow & Co. 
 
+**This is only a npm test version for checking typescript feature. The original repo: [@ekino/veggies](https://github.com/ekino/veggies)**
+
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [CLI](#cli)   

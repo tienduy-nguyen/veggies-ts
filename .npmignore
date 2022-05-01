@@ -2,9 +2,6 @@
 *.log
 npm-debug.log*
 
-# CI
-.travis.yml
-
 # Coverage directory used by tools like istanbul
 coverage
 
@@ -12,6 +9,7 @@ coverage
 doc
 _doc
 examples
+docs
 
 # Tests
 tests
@@ -30,6 +28,7 @@ node_modules
 .editorconfig
 
 # misc
+src
 scripts
 Makefile
 .commitlintrc.yml
@@ -45,3 +44,4 @@ Makefile
 .pnp.*
 jest.config.js
 .yarnrc.yml
+.prettierrc
