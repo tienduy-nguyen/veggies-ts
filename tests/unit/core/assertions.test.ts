@@ -1,19 +1,12 @@
+import { SinonFakeTimers, useFakeTimers } from 'sinon'
 import { assertObjectMatchSpec, countNestedProperties } from '../../../src/core/assertions'
 
 describe('core > assertions', () => {
+    let clock: SinonFakeTimers
     beforeAll(() => {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return,@typescript-eslint/explicit-function-return-type
-        const MockDate = (lastDate) => () => new lastDate(2018, 4, 1)
-        // @ts-ignore
-        global.Date = jest.fn(MockDate(global.Date))
+        clock = useFakeTimers(new Date('2018-04-01'))
     })
-
-    afterAll(() => {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        global.Date.mockRestore()
-    })
+    afterAll(() => clock.restore())
 
     test('should allow to count object properties', () => {
         expect(
@@ -653,14 +646,14 @@ describe('core > assertions', () => {
 
     test("check object property equals 'equalRelativeDate' and format", () => {
         const object = {
-            beginDate: '2018-04-30',
+            beginDate: '2018-04-01',
         }
         expect(() => {
             assertObjectMatchSpec(object, [
                 {
                     field: 'beginDate',
                     matcher: 'equalRelativeDate',
-                    value: '-1,days,fr,YYYY-MM-DD',
+                    value: '-0,day,fr,YYYY-MM-DD',
                 },
             ])
         }).not.toThrow()
@@ -670,11 +663,11 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: 'equalRelativeDate',
-                    value: '+2,days,fr,YYYY-MM-DD',
+                    value: '+2,day,fr,YYYY-MM-DD',
                 },
             ])
         }).toThrow(
-            `Expected property 'beginDate' to equal '2018-05-03', but found '2018-04-30': expected '2018-04-30' to deeply equal '2018-05-03'`
+            `Expected property 'beginDate' to equal '2018-04-03', but found '2018-04-01': expected '2018-04-01' to deeply equal '2018-04-03'`
         )
 
         expect(() => {
@@ -682,11 +675,11 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: 'equalRelativeDate',
-                    value: '-2,days,fr,YYYY-MM-DD',
+                    value: '-2,day,fr,YYYY-MM-DD',
                 },
             ])
         }).toThrow(
-            `Expected property 'beginDate' to equal '2018-04-29', but found '2018-04-30': expected '2018-04-30' to deeply equal '2018-04-29'`
+            `Expected property 'beginDate' to equal '2018-03-30', but found '2018-04-01': expected '2018-04-01' to deeply equal '2018-03-30'`
         )
 
         expect(() => {
@@ -694,11 +687,11 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: 'equalRelativeDate',
-                    value: "-2,days,fr,[Aujourd'hui] YYYY-MM-DD hh[h]mm",
+                    value: "-2,day,fr,[Aujourd'hui] YYYY-MM-DD hh[h]mm",
                 },
             ])
         }).toThrow(
-            `Expected property 'beginDate' to equal 'Aujourd'hui 2018-04-29 12h00', but found '2018-04-30': expected '2018-04-30' to deeply equal 'Aujourd\\'hui 2018-04-29 12h00'`
+            `Expected property 'beginDate' to equal 'Aujourd'hui 2018-03-30 02h00', but found '2018-04-01': expected '2018-04-01' to deeply equal 'Aujourd\\'hui 2018-03-30 02h00'`
         )
 
         expect(() => {
@@ -706,36 +699,34 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: 'equalRelativeDate',
-                    value: '-2,days,EN-ZS,YYYY-MM-DD',
+                    value: '-2,day,EN-ZS,YYYY-MM-DD',
                 },
             ])
         }).toThrow(
-            `Expected property 'beginDate' to equal '2018-04-29', but found '2018-04-30': expected '2018-04-30' to deeply equal '2018-04-29'`
+            `Expected property 'beginDate' to equal '2018-03-30', but found '2018-04-01': expected '2018-04-01' to deeply equal '2018-03-30'`
         )
     })
 
     test("check object property equals does not 'equalRelativeDate' and format", () => {
         const object = {
-            beginDate: '2018-04-30',
+            beginDate: '2018-04-01',
         }
         expect(() => {
             assertObjectMatchSpec(object, [
                 {
                     field: 'beginDate',
                     matcher: 'not equalRelativeDate',
-                    value: '-1,days,fr,YYYY-MM-DD',
+                    value: '-1,day,fr,YYYY-MM-DD',
                 },
             ])
-        }).toThrow(
-            `Expected property 'beginDate' to not equal '2018-04-30', but found '2018-04-30': expected '2018-04-30' to not deeply equal '2018-04-30'`
-        )
+        }).not.toThrow()
 
         expect(() => {
             assertObjectMatchSpec(object, [
                 {
                     field: 'beginDate',
                     matcher: 'does not equalRelativeDate',
-                    value: '+2,days,fr,YYYY-MM-DD',
+                    value: '+2,day,fr,YYYY-MM-DD',
                 },
             ])
         }).not.toThrow()
@@ -745,7 +736,7 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: '!equalRelativeDate',
-                    value: '-2,days,fr,YYYY-MM-DD',
+                    value: '-2,day,fr,YYYY-MM-DD',
                 },
             ])
         }).not.toThrow()
@@ -755,7 +746,7 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: `doesn't equalRelativeDate`,
-                    value: "-2,days,fr,[Aujourd'hui] YYYY-MM-DD hh[h]mm",
+                    value: "-2,day,fr,[Aujourd'hui] YYYY-MM-DD hh[h]mm",
                 },
             ])
         }).not.toThrow()
@@ -765,7 +756,7 @@ describe('core > assertions', () => {
                 {
                     field: 'beginDate',
                     matcher: 'not equalRelativeDate',
-                    value: '-2,days,EN-ZS,YYYY-MM-DD',
+                    value: '-2,day,EN-ZS,YYYY-MM-DD',
                 },
             ])
         }).not.toThrow()
@@ -779,7 +770,7 @@ describe('core > assertions', () => {
             {
                 field: 'beginDate',
                 matcher: 'equalRelativeDate',
-                value: '1,days,EN_US,YYYY-MM-DD',
+                value: '1,day,EN_US,YYYY-MM-DD',
             },
         ]
 

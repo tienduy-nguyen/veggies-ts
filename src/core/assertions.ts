@@ -4,11 +4,10 @@
 
 import _ from 'lodash'
 import { expect, use } from 'chai'
-import moment from 'moment-timezone'
+import dayjs, { ManipulateType } from 'dayjs'
 import * as Cast from './cast'
 import { registerChaiAssertion } from './custom_chai_assertions'
 import { MatchingRule, ObjectFieldSpec } from './core_types'
-import { DurationInputArg2 } from 'moment'
 
 use(registerChaiAssertion)
 
@@ -21,7 +20,7 @@ const presentRegex = new RegExp(`^(${negationRegex})?(defined|present|\\?)$`)
 const equalRegex = new RegExp(`^(${negationRegex})?(equals?|=)$`)
 const typeRegex = new RegExp(`^(${negationRegex})?(type|#=)$`)
 const relativeDateRegex = new RegExp(`^(${negationRegex})?(equalRelativeDate)$`)
-const relativeDateValueRegex = /^(\+?\d|-?\d),([A-Za-z]+),([A-Za-z-]{2,5}),(.+)$/
+const relativeDateValueRegex = /^(\+?\d+|-?\d+),([A-Za-z]+),([A-Za-z-]{2,5}),(.+)$/
 
 export const RuleName = Object.freeze({
     Match: Symbol('match'),
@@ -198,13 +197,10 @@ export const assertObjectMatchSpec = (
                 if (match === null) throw new Error('relative date arguments are invalid')
                 const [, amount, unit, locale, format] = match
 
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-                const normalizedLocale = Intl.getCanonicalLocales(locale)[0]
-                const expectedDate = moment()
-                    .add(amount, unit as DurationInputArg2)
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                const amountNumber = parseInt(amount as string)
+                const normalizedLocale = Intl.getCanonicalLocales(locale as string)[0] as string
+                const expectedDate = dayjs()
+                    .add(amountNumber, unit as ManipulateType)
                     .locale(normalizedLocale)
                     .format(format)
                 const baseExpect = expect(
