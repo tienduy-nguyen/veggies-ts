@@ -29,7 +29,7 @@ describe('extensions > snapshot > file_system', () => {
         let createDirectoryStub: SinonStub, dirnameStub: SinonStub, writeFileSyncStub: SinonStub
 
         beforeAll(() => {
-            createDirectoryStub = sandbox.stub(fileSystem, 'createDirectory')
+            createDirectoryStub = sandbox.stub(fs, 'mkdirsSync')
             dirnameStub = sandbox.stub(path, 'dirname')
             writeFileSyncStub = sandbox.stub(fs, 'writeFileSync')
         })
@@ -41,7 +41,7 @@ describe('extensions > snapshot > file_system', () => {
             const file = 'folder1/folder2/test.json'
             const content = 'test'
 
-            dirnameStub.returns(folder)
+            dirnameStub.withArgs(file).returns(folder)
 
             fileSystem.writeFileContent(file, content)
             expect(dirnameStub.calledWithExactly(file)).toBeTruthy()

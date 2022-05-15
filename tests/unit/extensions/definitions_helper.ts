@@ -4,10 +4,6 @@ import { defineStep } from '@cucumber/cucumber'
 jest.mock('@cucumber/cucumber')
 const defineStepMock = <jest.Mock<typeof defineStep>>defineStep
 
-export interface DefinitionsHelper {
-    defShouldMatch(regex: RegExp, str: string, expectedArgs: string[]): void
-    defShouldNotMatch(regex: RegExp, str: string): void
-}
 export interface RegisteredDefinition {
     matcher: RegExp
     exec(thisContext: object, ...args: unknown[]): Awaited<unknown>

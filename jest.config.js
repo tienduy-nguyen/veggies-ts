@@ -1,11 +1,10 @@
 module.exports = {
-    preset: 'ts-jest',
     testEnvironment: 'node',
     clearMocks: true,
     moduleFileExtensions: ['js', 'ts'],
-    testRegex: '.*\\.test\\.(t|j)s$',
+    testMatch: ['**/tests/unit/**/*.test.[jt]s'],
     transform: {
-        '^.+\\.(t|j)s$': 'ts-jest',
+        '^.+\\.(t|j)s$': '@swc/jest',
     },
     modulePathIgnorePatterns: ['<rootDir>/build'],
     collectCoverageFrom: ['src/**/*.ts'],
