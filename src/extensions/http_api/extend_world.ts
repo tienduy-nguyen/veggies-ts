@@ -1,6 +1,6 @@
+import { HttpApi } from '.'
 import { VeggiesWorld } from '../../core/core_types'
 import { hasExtension, registerExtension } from '../../core/registry'
-import { HttpApiClient } from './http_api'
 
 export const extendWorld = (world: VeggiesWorld): void => {
     if (!hasExtension(world, 'state')) {
@@ -9,6 +9,6 @@ export const extendWorld = (world: VeggiesWorld): void => {
         )
     }
 
-    world.httpApiClient = HttpApiClient.getInstance()
+    world.httpApi = HttpApi.getInstance()
     registerExtension(world, 'http_api')
 }

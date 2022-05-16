@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import { fixtures } from '../../../../src/extensions/fixtures'
+import { Fixtures } from '../../../../src/extensions/fixtures'
 import { createSandbox, SinonStub, stub } from 'sinon'
 import fs from 'fs'
 import path from 'path'
@@ -9,6 +9,7 @@ const textContent = 'This data were loaded from mocked text file'
 const jsonContent = { type: 'json', testing: true }
 const jsContent = { type: 'javascript module', testing: true }
 
+const fixtures = Fixtures.getInstance()
 describe('extensions > fixtures > fixtures', () => {
     afterEach(() => {
         fixtures.reset()

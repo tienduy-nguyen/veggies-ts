@@ -9,8 +9,3 @@ export type Headers = {
 }
 
 export type RequestOptions = CoreOptions & { uri: string }
-
-export type HttpApiConfig = {
-    baseUrl: string
-    [props: string]: unknown
-}

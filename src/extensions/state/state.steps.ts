@@ -1,8 +1,8 @@
 import { Given, When } from '@cucumber/cucumber'
+import { State } from '.'
 import * as Cast from '../../core/cast'
-import { state } from './state'
 
-export const install = (): void => {
+export const install = (state: State): void => {
     Given(/^(?:I )?set state (.+) to (.+)$/, function (key: string, value: string) {
         state.set(key, Cast.value(value))
     })

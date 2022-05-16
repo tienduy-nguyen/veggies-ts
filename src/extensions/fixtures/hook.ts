@@ -1,5 +1,5 @@
 import { Before } from '@cucumber/cucumber'
-import { fixtures } from './fixtures'
+import { Fixtures } from '.'
 
 /**
  * Registers hooks for the fixtures extension.
@@ -7,7 +7,7 @@ import { fixtures } from './fixtures'
  * @module extensions/fixtures/hooks
  */
 
-export const install = (): void => {
+export const install = (fixtures: Fixtures): void => {
     Before(function (scenarioInfos) {
         fixtures.setFeatureUri(scenarioInfos.gherkinDocument.uri)
     })

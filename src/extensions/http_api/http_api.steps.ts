@@ -6,12 +6,12 @@ import * as Cast from '../../core/cast'
 import { assertObjectMatchSpec } from '../../core/assertions'
 import { STATUS_CODES } from 'http'
 import { parseMatchExpression } from './utils'
-import { httpApiClient, HttpApiClient } from './http_api'
-import { fixtures } from '../fixtures'
-import { state } from '../state'
+import { State } from '../state'
 import { Cookie } from 'tough-cookie'
 import Properties = Cookie.Properties
 import { Response } from 'request'
+import { HttpApi } from './index'
+import { Fixtures } from '../fixtures'
 
 const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
 
@@ -20,33 +20,38 @@ const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
  *
  * @param {Object} client
  */
-const mustGetResponse = (client: HttpApiClient): Response | null => {
+const mustGetResponse = (client: HttpApi): Response | null => {
     const response = client.getResponse()
     expect(response, 'No response available').to.not.be.empty
 
     return response
 }
 
-export const install = ({ baseUrl = '' } = {}): void => {
+export const install = (
+    httpApi: HttpApi,
+    fixtures: Fixtures,
+    state: State,
+    { baseUrl = '' } = {}
+): void => {
     /**
      * Setting http headers
      */
     Given(/^(?:I )?set request headers$/, function (step: DataTable) {
-        httpApiClient.setHeaders(Cast.object(state.populateObject(step.rowsHash())))
+        httpApi.setHeaders(Cast.object(state.populateObject(step.rowsHash())))
     })
 
     /**
      * Setting http option followRedirect to false
      */
     Given(/^(?:I )?do not follow redirect$/, function () {
-        httpApiClient.setFollowRedirect(false)
+        httpApi.setFollowRedirect(false)
     })
 
     /**
      * Setting http option followRedirect to true
      */
     Given(/^(?:I )?follow redirect$/, function () {
-        httpApiClient.setFollowRedirect(true)
+        httpApi.setFollowRedirect(true)
     })
 
     /**
@@ -56,7 +61,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      */
     Given(/^(?:I )?assign request headers$/, function (step: DataTable) {
         const headers = Cast.object(state.populateObject(step.rowsHash()))
-        _.each(headers, (value, key) => httpApiClient.setHeader(key, value))
+        _.each(headers, (value, key) => httpApi.setHeader(key, value))
     })
 
     /**
@@ -65,7 +70,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Given(
         /^(?:I )?set ([a-zA-Z0-9-_]+) request header to (.+)$/,
         function (key: string, value: string) {
-            httpApiClient.setHeader(key, Cast.value(state.populate(value)))
+            httpApi.setHeader(key, Cast.value(state.populate(value)))
         }
     )
 
@@ -73,14 +78,14 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Clearing headers
      */
     Given(/^(?:I )?clear request headers/, function () {
-        httpApiClient.clearHeaders()
+        httpApi.clearHeaders()
     })
 
     /**
      * Setting json payload
      */
     Given(/^(?:I )?set request json body$/, function (step: DataTable) {
-        httpApiClient.setJsonBody(Cast.object(state.populateObject(step.rowsHash())))
+        httpApi.setJsonBody(Cast.object(state.populateObject(step.rowsHash())))
     })
 
     /**
@@ -88,7 +93,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      */
     Given(/^(?:I )?set request json body from (.+)$/, function (fixture: string) {
         return fixtures.load(fixture).then((data: object) => {
-            httpApiClient.setJsonBody(data)
+            httpApi.setJsonBody(data)
         })
     })
 
@@ -96,7 +101,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Setting form data
      */
     Given(/^(?:I )?set request form body$/, function (step: DataTable) {
-        httpApiClient.setFormBody(Cast.object(state.populateObject(step.rowsHash())))
+        httpApi.setFormBody(Cast.object(state.populateObject(step.rowsHash())))
     })
 
     /**
@@ -104,7 +109,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      */
     Given(/^(?:I )?set request form body from (.+)$/, function (fixture: string) {
         return fixtures.load(fixture).then((data: object) => {
-            httpApiClient.setFormBody(data)
+            httpApi.setFormBody(data)
         })
     })
 
@@ -113,7 +118,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      */
     Given(/^(?:I )?set request multipart body from (.+)$/, function (fixture: string) {
         return fixtures.load(fixture).then((data: object) => {
-            httpApiClient.setMultipartBody(data)
+            httpApi.setMultipartBody(data)
         })
     })
 
@@ -121,14 +126,14 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Clearing body
      */
     Given(/^(?:I )?clear request body$/, function () {
-        httpApiClient.clearBody()
+        httpApi.clearBody()
     })
 
     /**
      * Setting query parameters
      */
     Given(/^(?:I )?set request query$/, function (step: DataTable) {
-        httpApiClient.setQuery(Cast.object(state.populateObject(step.rowsHash())))
+        httpApi.setQuery(Cast.object(state.populateObject(step.rowsHash())))
     })
 
     /**
@@ -137,7 +142,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Given(
         /^(?:I )?pick response (json|header) (.+) as (.+)$/,
         function (dataSource: string, path: string, key: string) {
-            const response = httpApiClient.getResponse()
+            const response = httpApi.getResponse()
             const data = dataSource !== 'header' ? response?.body : response?.headers
 
             state.set(key, _.get(data, path))
@@ -162,14 +167,14 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Enabling cookies
      */
     Given(/^(?:I )?enable cookies$/, function () {
-        httpApiClient.enableCookies()
+        httpApi.enableCookies()
     })
 
     /**
      * Disabling cookies
      */
     Given(/^(?:I )?disable cookies$/, function () {
-        httpApiClient.disableCookies()
+        httpApi.disableCookies()
     })
 
     /**
@@ -177,7 +182,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      */
     Given(/^(?:I )?set cookie from (.+)$/, function (fixture: string) {
         return fixtures.load(fixture).then((cookie: Properties) => {
-            httpApiClient.setCookie(cookie)
+            httpApi.setCookie(cookie)
         })
     })
 
@@ -185,28 +190,28 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Clearing client request cookies
      */
     Given(/^(?:I )?clear request cookies$/, function () {
-        httpApiClient.clearRequestCookies()
+        httpApi.clearRequestCookies()
     })
 
     /**
      * Resetting the client's state
      */
     When(/^(?:I )?reset http client$/, function () {
-        httpApiClient.reset()
+        httpApi.reset()
     })
 
     /**
      * Performing a request
      */
     When(/^(?:I )?(GET|POST|PUT|DELETE|PATCH) (.+)$/, function (method: string, path: string) {
-        return httpApiClient.makeRequest(method, state.populate(path), baseUrl)
+        return httpApi.makeRequest(method, state.populate(path), baseUrl)
     })
 
     /**
      * Dumping response body
      */
     When(/^(?:I )?dump response body$/, function () {
-        const response = mustGetResponse(httpApiClient)
+        const response = mustGetResponse(httpApi)
         console.log(inspect(response?.body, { colors: true, depth: null })) // eslint-disable-line no-console
     })
 
@@ -214,7 +219,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Dumping response headers
      */
     When(/^(?:I )?dump response headers$/, function () {
-        const response = mustGetResponse(httpApiClient)
+        const response = mustGetResponse(httpApi)
         console.log(response?.headers) // eslint-disable-line no-console
     })
 
@@ -222,15 +227,15 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Dumping response cookies
      */
     When(/^(?:I )?dump response cookies$/, function () {
-        mustGetResponse(httpApiClient)
-        console.log(httpApiClient.getCookies())
+        mustGetResponse(httpApi)
+        console.log(httpApi.getCookies())
     })
 
     /**
      * Checking response status code
      */
     Then(/^response status code should be ([1-5]\d\d)$/, function (statusCode: number) {
-        const response = mustGetResponse(httpApiClient)
+        const response = mustGetResponse(httpApi)
         expect(
             response?.statusCode,
             `Expected status code to be: ${statusCode}, but found: ${
@@ -247,7 +252,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
             throw new TypeError(`'${statusMessage}' is not a valid status message`)
         }
 
-        const response = mustGetResponse(httpApiClient)
+        const response = mustGetResponse(httpApi)
         const statusCode = _.findKey(STATUS_CODES, (msg) => _.lowerCase(msg) === statusMessage)
         const statusCodeResponse = response?.statusCode ?? 0
         const currentStatusMessage =
@@ -265,7 +270,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Checking response cookie is present|absent
      */
     Then(/^response should (not )?have an? (.+) cookie$/, function (flag: string, key: string) {
-        const cookie = httpApiClient.getCookie(key)
+        const cookie = httpApi.getCookie(key)
 
         if (flag == undefined) {
             expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
@@ -278,7 +283,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Checking response cookie is|isn't secure
      */
     Then(/^response (.+) cookie should (not )?be secure$/, function (key: string, flag: string) {
-        const cookie = httpApiClient.getCookie(key)
+        const cookie = httpApi.getCookie(key)
         expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
         if (flag == undefined) {
@@ -292,7 +297,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Checking response cookie httpOnly
      */
     Then(/^response (.+) cookie should (not )?be http only$/, function (key: string, flag: string) {
-        const cookie = httpApiClient.getCookie(key)
+        const cookie = httpApi.getCookie(key)
         expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
         if (flag == undefined) {
@@ -308,7 +313,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Then(
         /^response (.+) cookie domain should (not )?be (.+)$/,
         function (key: string, flag: string, domain: string) {
-            const cookie = httpApiClient.getCookie(key)
+            const cookie = httpApi.getCookie(key)
             expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
             const cookieDomain = cookie?.domain || ''
@@ -333,7 +338,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Then(
         /^(?:I )?json response should (fully )?match$/,
         function (fully: string, table: DataTable) {
-            const response = mustGetResponse(httpApiClient)
+            const response = mustGetResponse(httpApi)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const body = response?.body
 
@@ -360,7 +365,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Then(
         /^(?:I )?should receive a collection of (\d+) items?(?: for path )?(.+)?$/,
         function (size: number, path: string) {
-            const response = mustGetResponse(httpApiClient)
+            const response = mustGetResponse(httpApi)
             const body = response?.body
 
             const array = path != undefined ? _.get(body, path) : body
@@ -373,7 +378,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
      * Verifies that response matches a fixture.
      **/
     Then(/^response should match fixture (.+)$/, function (fixtureId: string) {
-        const response = mustGetResponse(httpApiClient)
+        const response = mustGetResponse(httpApi)
 
         return fixtures.load(fixtureId).then((snapshot) => {
             expect(response?.body).to.deep.equal(snapshot)
@@ -386,7 +391,7 @@ export const install = ({ baseUrl = '' } = {}): void => {
     Then(
         /^response header (.+) should (not )?(equal|contain|match) (.+)$/,
         function (key: string, flag: string, comparator: string, expectedValue: string) {
-            const response = mustGetResponse(httpApiClient)
+            const response = mustGetResponse(httpApi)
             const header = response?.headers[key.toLowerCase()]
 
             expect(header, `Header '${key}' does not exist`).to.not.be.undefined

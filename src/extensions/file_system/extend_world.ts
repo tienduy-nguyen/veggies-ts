@@ -1,7 +1,6 @@
+import { FileSystem } from '.'
 import { VeggiesWorld } from '../../core/core_types'
 import { hasExtension, registerExtension } from '../../core/registry'
-
-import * as fileSystem from './file_system'
 
 export const extendWorld = (world: VeggiesWorld): void => {
     if (!hasExtension(world, 'cli')) {
@@ -10,6 +9,6 @@ export const extendWorld = (world: VeggiesWorld): void => {
         )
     }
 
-    world.fileSystem = fileSystem
+    world.fileSystem = FileSystem.getInstance()
     registerExtension(world, 'file_system')
 }

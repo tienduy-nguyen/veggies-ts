@@ -1,4 +1,4 @@
-import { Cli } from './cli'
+import { Cli } from '.'
 import { VeggiesWorld } from '../../core/core_types'
 import { hasExtension, registerExtension } from '../../core/registry'
 

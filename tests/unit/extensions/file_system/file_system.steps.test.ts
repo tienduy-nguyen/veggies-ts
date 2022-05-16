@@ -1,9 +1,11 @@
 import { createSandbox, SinonStub, stub } from 'sinon'
 
 import * as helper from '../definitions_helper'
-import * as definitions from '../../../../src/extensions/file_system/definitions'
-import * as fileSystem from '../../../../src/extensions/file_system/file_system'
-import { cli } from '../../../../src/extensions/cli'
+import * as fileSystemSteps from '../../../../src/extensions/file_system/file_system.steps'
+import { FileSystem } from '../../../../src/extensions/file_system'
+import { Cli } from '../../../../src/extensions/cli'
+
+const cli = Cli.getInstance()
 
 describe('extensions > file_system', () => {
     const sandbox = createSandbox()
@@ -14,17 +16,17 @@ describe('extensions > file_system', () => {
         getCwdStub: SinonStub
 
     beforeAll(() => {
-        getFileContentStub = sandbox.stub(fileSystem, 'getFileContent')
-        getFileInfoStub = sandbox.stub(fileSystem, 'getFileInfo')
-        createDirectoryStub = sandbox.stub(fileSystem, 'createDirectory')
-        removeStub = sandbox.stub(fileSystem, 'remove')
+        getFileContentStub = sandbox.stub(FileSystem, 'getFileContent')
+        getFileInfoStub = sandbox.stub(FileSystem, 'getFileInfo')
+        createDirectoryStub = sandbox.stub(FileSystem, 'createDirectory')
+        removeStub = sandbox.stub(FileSystem, 'remove')
 
         getCwdStub = stub(cli, 'getCwd')
         getCwdStub.returns('test-cwd')
     })
 
     beforeEach(() => {
-        definitions.install()
+        fileSystemSteps.install(cli)
         sandbox.reset()
         getCwdStub.resetHistory()
     })

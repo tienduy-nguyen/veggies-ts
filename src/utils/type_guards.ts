@@ -11,12 +11,6 @@ export const isNumber = (n: unknown): n is number => {
     return Number.isFinite(n)
 }
 
-export const isPairDefined = <T, U>(
-    toTest: [T | undefined | null, U | undefined | null]
-): toTest is [T, U] => {
-    return !!toTest[0] && !!toTest[1]
-}
-
 export const isNotEmptyObject = <T extends Record<string, unknown> | Record<string, unknown>[]>(
     toTest?: T | null
 ): toTest is T => !!toTest && Object.values(toTest).some((value) => value != null)

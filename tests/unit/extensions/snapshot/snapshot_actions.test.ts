@@ -1,4 +1,4 @@
-import * as snapshotActions from '../../../../src/extensions/snapshot/snapshot_actions'
+import * as utils from '../../../../src/extensions/snapshot/utils'
 import { createSandbox, SinonStub, stub } from 'sinon'
 import * as fileSystem from '../../../../src/extensions/snapshot/file_system'
 import { dedent } from '../../../../src/extensions/snapshot/dedent'
@@ -20,7 +20,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
                 20: { name: 'Scenario 2', line: 20, prefix: 'Scenario 2 1' },
             }
 
-            expect(snapshotActions.prefixSnapshots(scenarios)).toEqual(expectedResult)
+            expect(utils.prefixSnapshots(scenarios)).toEqual(expectedResult)
         })
 
         it('prefixSnapshots works with duplicate scenarios names', () => {
@@ -36,13 +36,11 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
                 30: { name: 'Scenario 1', line: 30, prefix: 'Scenario 1 2' },
             }
 
-            expect(snapshotActions.prefixSnapshots(scenarios)).toEqual(expectedResult)
+            expect(utils.prefixSnapshots(scenarios)).toEqual(expectedResult)
         })
 
         it('prefixSnapshots throw an error if no scenarios object', () => {
-            expect(snapshotActions.prefixSnapshots).toThrowError(
-                /Scenarios are required to prefix snapshots/
-            )
+            expect(utils.prefixSnapshots).toThrowError(/Scenarios are required to prefix snapshots/)
         })
     })
 
@@ -87,14 +85,14 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
 
             getFileContentStub.withArgs(file).returns(fileContent)
 
-            expect(snapshotActions.extractScenarios(file)).toEqual(expectedContent)
+            expect(utils.extractScenarios(file)).toEqual(expectedContent)
 
             expect(getFileContentStub.calledOnce).toBeTruthy()
         })
 
         it('extractScenarios throw an error if no file', () => {
-            expect(snapshotActions.extractScenarios).toThrowError(/Invalid feature file undefined/)
-            expect(snapshotActions.extractScenarios).toThrowError(TypeError)
+            expect(utils.extractScenarios).toThrowError(/Invalid feature file undefined/)
+            expect(utils.extractScenarios).toThrowError(TypeError)
             expect(getFileContentStub.notCalled).toBeTruthy()
         })
     })
@@ -146,7 +144,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
             getFileInfoStub.returns({})
             getFileContentStub.returns(fileContent)
 
-            expect(snapshotActions.readSnapshotFile(file)).toEqual(expectedContent)
+            expect(utils.readSnapshotFile(file)).toEqual(expectedContent)
 
             expect(getFileInfoStub.calledWithExactly(file)).toBeTruthy()
             expect(getFileContentStub.calledWithExactly(file)).toBeTruthy()
@@ -158,14 +156,14 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
             const expectedContent = {}
             getFileInfoStub.returns(null)
 
-            expect(snapshotActions.readSnapshotFile(file)).toEqual(expectedContent)
+            expect(utils.readSnapshotFile(file)).toEqual(expectedContent)
 
             expect(getFileInfoStub.calledWithExactly(file)).toBeTruthy()
             expect(getFileContentStub.notCalled).toBeTruthy()
         })
 
         it('readSnapshotFile throw an error if no file', () => {
-            expect(snapshotActions.readSnapshotFile).toThrowError(
+            expect(utils.readSnapshotFile).toThrowError(
                 /Missing snapshot file undefined to read snapshots/
             )
         })
@@ -210,7 +208,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
         """
     `
 
-            snapshotActions.writeSnapshotFile(file, contentToWrite)
+            utils.writeSnapshotFile(file, contentToWrite)
 
             expect(writeFileContentStub.calledWithExactly(file, expectedWrite)).toBeTruthy()
         })
@@ -221,7 +219,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
             const featurePath = 'myfolder/featurefile.feature'
             const expectedPath = 'myfolder/__snapshots__/featurefile.feature.snap'
             const options = {}
-            expect(snapshotActions.snapshotsPath(featurePath, options)).toEqual(expectedPath)
+            expect(utils.snapshotsPath(featurePath, options)).toEqual(expectedPath)
         })
 
         it('snapshotsPath returns snapshot path with overrided folder and extension', () => {
@@ -231,7 +229,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
                 snapshotsDirname: 'testsnap',
                 snapshotsFileExtension: 'sna',
             }
-            expect(snapshotActions.snapshotsPath(featurePath, options)).toEqual(expectedPath)
+            expect(utils.snapshotsPath(featurePath, options)).toEqual(expectedPath)
         })
     })
 
@@ -273,7 +271,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
             // @ts-ignore
             diffMock.mockReturnValue(diffResult)
 
-            const diffMessage = snapshotActions.diff(snapshotContent, expectedContent)
+            const diffMessage = utils.diff(snapshotContent, expectedContent)
 
             expect(diffMessage).toBeNull()
 
@@ -288,7 +286,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
             // @ts-ignore
             diffMock.mockReturnValue(undefined)
 
-            const diffMessage = snapshotActions.diff(snapshotContent, expectedContent)
+            const diffMessage = utils.diff(snapshotContent, expectedContent)
 
             const expectedDiffMessage = '\n\u001b[32m- a\u001b[39m \n \u001b[31m+ b\u001b[39m'
 
@@ -341,7 +339,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
 
             const expectedDiffMessage = `\n${diffResult}`
 
-            const diffMessage = snapshotActions.diff(snapshotContent, expectedContent)
+            const diffMessage = utils.diff(snapshotContent, expectedContent)
 
             expect(diffMessage).toEqual(expectedDiffMessage)
         })
@@ -365,7 +363,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
         """
     `
 
-            expect(snapshotActions.formatSnapshotFile(content)).toEqual(expected)
+            expect(utils.formatSnapshotFile(content)).toEqual(expected)
         })
 
         it('formatSnapshotFile should format snapshot file content, sort by keys and escape back ticks', () => {
@@ -385,7 +383,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
         """
     `
 
-            expect(snapshotActions.formatSnapshotFile(content)).toEqual(expected)
+            expect(utils.formatSnapshotFile(content)).toEqual(expected)
         })
 
         test('formatSnapshotFile should normalize new lines', () => {
@@ -407,7 +405,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
     """
     `
 
-            expect(snapshotActions.formatSnapshotFile(content)).toEqual(expected)
+            expect(utils.formatSnapshotFile(content)).toEqual(expected)
         })
     })
 
@@ -427,7 +425,7 @@ describe('src > extensions > snapshot > snapshot_actions', () => {
                 ['scenario 2 1.1']: 'another content',
             }
 
-            expect(snapshotActions.parseSnapshotFile(content)).toEqual(expected)
+            expect(utils.parseSnapshotFile(content)).toEqual(expected)
         })
     })
 })

@@ -1,7 +1,9 @@
 import { createSandbox, SinonStub } from 'sinon'
+import { Cli } from '../../../../src/extensions/cli'
 import * as helper from '../definitions_helper'
-import * as definitions from '../../../../src/extensions/cli/definitions'
-import { cli } from '../../../../src/extensions/cli'
+import * as cliSteps from '../../../../src/extensions/cli/cli.steps'
+
+const cli = Cli.getInstance()
 
 describe('extensions > cli > definitions', () => {
     const sandbox = createSandbox()
@@ -24,7 +26,7 @@ describe('extensions > cli > definitions', () => {
         sandbox.stub(console, 'log')
     })
 
-    beforeEach(() => definitions.install())
+    beforeEach(() => cliSteps.install(cli))
 
     afterEach(() => {
         helper.clearContext()

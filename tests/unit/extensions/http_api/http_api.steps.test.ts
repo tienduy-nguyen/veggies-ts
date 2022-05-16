@@ -1,11 +1,14 @@
 import { createSandbox, SinonStub } from 'sinon'
 
 import * as helper from '../definitions_helper'
-import * as definitions from '../../../../src/extensions/http_api/definitions'
-import { httpApiClient } from '../../../../src/extensions/http_api'
-import { fixtures } from '../../../../src/extensions/fixtures'
-import { state } from '../../../../src/extensions/state'
+import * as httpApiSteps from '../../../../src/extensions/http_api/http_api.steps'
+import { HttpApi } from '../../../../src/extensions/http_api'
+import { Fixtures } from '../../../../src/extensions/fixtures'
+import { State } from '../../../../src/extensions/state'
 
+const httpApi = HttpApi.getInstance()
+const state = State.getInstance()
+const fixtures = Fixtures.getInstance()
 describe('extensions > http_api > definitions', () => {
     const sandbox = createSandbox()
     let setHeadersStub: SinonStub,
@@ -27,25 +30,25 @@ describe('extensions > http_api > definitions', () => {
         stateSetStub: SinonStub
 
     beforeAll(() => {
-        setHeadersStub = sandbox.stub(httpApiClient, 'setHeaders')
-        setHeaderStub = sandbox.stub(httpApiClient, 'setHeader')
-        clearHeadersStub = sandbox.stub(httpApiClient, 'clearHeaders')
-        setJsonBodyStub = sandbox.stub(httpApiClient, 'setJsonBody')
+        setHeadersStub = sandbox.stub(httpApi, 'setHeaders')
+        setHeaderStub = sandbox.stub(httpApi, 'setHeader')
+        clearHeadersStub = sandbox.stub(httpApi, 'clearHeaders')
+        setJsonBodyStub = sandbox.stub(httpApi, 'setJsonBody')
         loadFixturesStub = sandbox.stub(fixtures, 'load')
-        setFormBodyStub = sandbox.stub(httpApiClient, 'setFormBody')
-        setMultipartBodyStub = sandbox.stub(httpApiClient, 'setMultipartBody')
-        clearBodyStub = sandbox.stub(httpApiClient, 'clearBody')
-        setQueryStub = sandbox.stub(httpApiClient, 'setQuery')
-        setFollowRedirectStub = sandbox.stub(httpApiClient, 'setFollowRedirect')
-        enableCookiesStub = sandbox.stub(httpApiClient, 'enableCookies')
-        disableCookiesStub = sandbox.stub(httpApiClient, 'disableCookies')
-        getCookieStub = sandbox.stub(httpApiClient, 'getCookie')
-        resetStub = sandbox.stub(httpApiClient, 'reset')
-        getResponseStub = sandbox.stub(httpApiClient, 'getResponse')
+        setFormBodyStub = sandbox.stub(httpApi, 'setFormBody')
+        setMultipartBodyStub = sandbox.stub(httpApi, 'setMultipartBody')
+        clearBodyStub = sandbox.stub(httpApi, 'clearBody')
+        setQueryStub = sandbox.stub(httpApi, 'setQuery')
+        setFollowRedirectStub = sandbox.stub(httpApi, 'setFollowRedirect')
+        enableCookiesStub = sandbox.stub(httpApi, 'enableCookies')
+        disableCookiesStub = sandbox.stub(httpApi, 'disableCookies')
+        getCookieStub = sandbox.stub(httpApi, 'getCookie')
+        resetStub = sandbox.stub(httpApi, 'reset')
+        getResponseStub = sandbox.stub(httpApi, 'getResponse')
         stateGetStub = sandbox.stub(state, 'get')
         stateSetStub = sandbox.stub(state, 'set')
     })
-    beforeEach(() => definitions.install())
+    beforeEach(() => httpApiSteps.install(httpApi, fixtures, state))
 
     afterEach(() => {
         helper.clearContext()
@@ -61,7 +64,7 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('set request headers')
 
         const clientMock = {
-            httpApiClient: { setHeaders: setHeadersStub },
+            httpApi: { setHeaders: setHeadersStub },
             state: { populateObject: (o: string): string => o },
         }
         const headers = {
@@ -69,7 +72,7 @@ describe('extensions > http_api > definitions', () => {
             'User-Agent': 'veggies/1.0',
         }
         def.exec(clientMock, { rowsHash: () => headers })
-        expect(clientMock.httpApiClient.setHeaders.calledWithExactly(headers)).toBeTruthy()
+        expect(clientMock.httpApi.setHeaders.calledWithExactly(headers)).toBeTruthy()
     })
 
     test('assign request headers', () => {
@@ -80,7 +83,7 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('assign request headers')
 
         const clientMock = {
-            httpApiClient: { setHeader: setHeaderStub },
+            httpApi: { setHeader: setHeaderStub },
             state: { populateObject: (o: string): string => o },
         }
         const headers = {
@@ -89,10 +92,10 @@ describe('extensions > http_api > definitions', () => {
         }
         def.exec(clientMock, { rowsHash: () => headers })
         expect(
-            clientMock.httpApiClient.setHeader.calledWithExactly('Accept', 'application/json')
+            clientMock.httpApi.setHeader.calledWithExactly('Accept', 'application/json')
         ).toBeTruthy()
         expect(
-            clientMock.httpApiClient.setHeader.calledWithExactly('User-Agent', 'veggies/1.0')
+            clientMock.httpApi.setHeader.calledWithExactly('User-Agent', 'veggies/1.0')
         ).toBeTruthy()
     })
 
@@ -105,11 +108,11 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('set Accept request header to test', ['Accept', 'test'])
 
         const clientMock = {
-            httpApiClient: { setHeader: setHeaderStub },
+            httpApi: { setHeader: setHeaderStub },
             state: { populate: (v: string): string => v },
         }
         def.exec(clientMock, 'Accept', 'test')
-        expect(clientMock.httpApiClient.setHeader.calledWithExactly('Accept', 'test')).toBeTruthy()
+        expect(clientMock.httpApi.setHeader.calledWithExactly('Accept', 'test')).toBeTruthy()
     })
 
     test('set a single request header with a dash', () => {
@@ -120,13 +123,11 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('set X-Custom request header to test', ['X-Custom', 'test'])
 
         const clientMock = {
-            httpApiClient: { setHeader: setHeaderStub },
+            httpApi: { setHeader: setHeaderStub },
             state: { populate: (v: string): string => v },
         }
         def.exec(clientMock, 'X-Custom', 'test')
-        expect(
-            clientMock.httpApiClient.setHeader.calledWithExactly('X-Custom', 'test')
-        ).toBeTruthy()
+        expect(clientMock.httpApi.setHeader.calledWithExactly('X-Custom', 'test')).toBeTruthy()
     })
 
     test('set a single request header with an underscore', () => {
@@ -137,13 +138,11 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('set X_Custom request header to test', ['X_Custom', 'test'])
 
         const clientMock = {
-            httpApiClient: { setHeader: setHeaderStub },
+            httpApi: { setHeader: setHeaderStub },
             state: { populate: (v: string): string => v },
         }
         def.exec(clientMock, 'X_Custom', 'test')
-        expect(
-            clientMock.httpApiClient.setHeader.calledWithExactly('X_Custom', 'test')
-        ).toBeTruthy()
+        expect(clientMock.httpApi.setHeader.calledWithExactly('X_Custom', 'test')).toBeTruthy()
     })
 
     test('clear request headers', () => {
@@ -153,9 +152,9 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('I clear request headers')
         def.shouldMatch('clear request headers')
 
-        const clientMock = { httpApiClient: { clearHeaders: clearHeadersStub } }
+        const clientMock = { httpApi: { clearHeaders: clearHeadersStub } }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.clearHeaders.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.clearHeaders.calledOnce).toBeTruthy()
     })
 
     test('set request json body', () => {
@@ -181,14 +180,14 @@ describe('extensions > http_api > definitions', () => {
             id: '2',
         }
         const worldMock = {
-            httpApiClient: { setJsonBody: setJsonBodyStub },
+            httpApi: { setJsonBody: setJsonBodyStub },
             fixtures: { load: loadFixturesStub },
         }
         loadFixturesStub.resolves(fixture)
 
         await def.exec(worldMock, 'fixture')
         expect(worldMock.fixtures.load.calledWithExactly('fixture')).toBeTruthy()
-        expect(worldMock.httpApiClient.setJsonBody.calledOnceWithExactly(fixture)).toBeTruthy()
+        expect(worldMock.httpApi.setJsonBody.calledOnceWithExactly(fixture)).toBeTruthy()
     })
 
     test('set request form body', () => {
@@ -214,14 +213,14 @@ describe('extensions > http_api > definitions', () => {
             id: '2',
         }
         const worldMock = {
-            httpApiClient: { setFormBody: setFormBodyStub },
+            httpApi: { setFormBody: setFormBodyStub },
             fixtures: { load: loadFixturesStub },
         }
         loadFixturesStub.resolves(fixture)
 
         await def.exec(worldMock, 'fixture')
         expect(worldMock.fixtures.load.calledWithExactly('fixture')).toBeTruthy()
-        expect(worldMock.httpApiClient.setFormBody.calledWithExactly(fixture)).toBeTruthy()
+        expect(worldMock.httpApi.setFormBody.calledWithExactly(fixture)).toBeTruthy()
     })
 
     test('set request multipart body from', async () => {
@@ -239,14 +238,14 @@ describe('extensions > http_api > definitions', () => {
             file: 'some-file',
         }
         const worldMock = {
-            httpApiClient: { setMultipartBody: setMultipartBodyStub },
+            httpApi: { setMultipartBody: setMultipartBodyStub },
             fixtures: { load: loadFixturesStub },
         }
         loadFixturesStub.resolves(fixture)
 
         await def.exec(worldMock, 'fixture')
         expect(worldMock.fixtures.load.calledWithExactly('fixture')).toBeTruthy()
-        expect(worldMock.httpApiClient.setMultipartBody.calledWithExactly(fixture)).toBeTruthy()
+        expect(worldMock.httpApi.setMultipartBody.calledWithExactly(fixture)).toBeTruthy()
     })
 
     test('clear request body', () => {
@@ -256,9 +255,9 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('I clear request body')
         def.shouldMatch('clear request body')
 
-        const clientMock = { httpApiClient: { clearBody: clearBodyStub } }
+        const clientMock = { httpApi: { clearBody: clearBodyStub } }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.clearBody.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.clearBody.calledOnce).toBeTruthy()
     })
 
     test('set request query', () => {
@@ -269,7 +268,7 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('set request query')
 
         const clientMock = {
-            httpApiClient: { setQuery: setQueryStub },
+            httpApi: { setQuery: setQueryStub },
             state: { populateObject: (o: string): string => o },
         }
         const query = {
@@ -277,7 +276,7 @@ describe('extensions > http_api > definitions', () => {
             id: '2',
         }
         def.exec(clientMock, { rowsHash: () => query })
-        expect(clientMock.httpApiClient.setQuery.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.setQuery.calledOnce).toBeTruthy()
     })
 
     test('follow redirect', () => {
@@ -288,10 +287,10 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('follow redirect')
 
         const clientMock = {
-            httpApiClient: { setFollowRedirect: setFollowRedirectStub },
+            httpApi: { setFollowRedirect: setFollowRedirectStub },
         }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.setFollowRedirect.calledWithExactly(true)).toBeTruthy()
+        expect(clientMock.httpApi.setFollowRedirect.calledWithExactly(true)).toBeTruthy()
     })
 
     test('do not follow redirect', () => {
@@ -302,10 +301,10 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('do not follow redirect')
 
         const clientMock = {
-            httpApiClient: { setFollowRedirect: setFollowRedirectStub },
+            httpApi: { setFollowRedirect: setFollowRedirectStub },
         }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.setFollowRedirect.calledWithExactly(false)).toBeTruthy()
+        expect(clientMock.httpApi.setFollowRedirect.calledWithExactly(false)).toBeTruthy()
     })
 
     test('pick response json|header property', () => {
@@ -364,9 +363,9 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('I enable cookies')
         def.shouldMatch('enable cookies')
 
-        const clientMock = { httpApiClient: { enableCookies: enableCookiesStub } }
+        const clientMock = { httpApi: { enableCookies: enableCookiesStub } }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.enableCookies.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.enableCookies.calledOnce).toBeTruthy()
     })
 
     test('disable cookies', () => {
@@ -376,9 +375,9 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('I disable cookies')
         def.shouldMatch('disable cookies')
 
-        const clientMock = { httpApiClient: { disableCookies: disableCookiesStub } }
+        const clientMock = { httpApi: { disableCookies: disableCookiesStub } }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.disableCookies.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.disableCookies.calledOnce).toBeTruthy()
     })
 
     test('test cookie is present', () => {
@@ -390,7 +389,7 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('response should have a test cookie', [undefined, 'test'])
         def.shouldMatch('response should have an test cookie', [undefined, 'test'])
 
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
         getCookieStub.withArgs('cookie_exist').returns('some content')
         getCookieStub.withArgs('cookie_dont_exist').returns(null)
 
@@ -415,7 +414,7 @@ describe('extensions > http_api > definitions', () => {
         getCookieStub.withArgs('cookie_exist').returns('some content')
         getCookieStub.withArgs('cookie_dont_exist').returns(null)
 
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'not ', 'cookie_exist')).toThrow(
             "A cookie exists for key 'cookie_exist': expected 'some content' to be null"
@@ -432,7 +431,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('secure_cookie').returns({ secure: true })
         getCookieStub.withArgs('not_secure_cookie').returns({ secure: false })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'secure_cookie', undefined)).not.toThrow()
         expect(() => def.exec(clientMock, 'not_secure_cookie', undefined)).toThrow(
@@ -449,7 +448,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('secure_cookie').returns({ secure: true })
         getCookieStub.withArgs('not_secure_cookie').returns({ secure: false })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'secure_cookie', 'not ')).toThrow(
             "Cookie 'secure_cookie' is secure: expected true to be false"
@@ -468,7 +467,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('http_only').returns({ httpOnly: true })
         getCookieStub.withArgs('not_http_only').returns({ httpOnly: false })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'http_only', undefined)).not.toThrow()
         expect(() => def.exec(clientMock, 'not_http_only', undefined)).toThrow(
@@ -487,7 +486,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('http_only').returns({ httpOnly: true })
         getCookieStub.withArgs('not_http_only').returns({ httpOnly: false })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'http_only', 'not ')).toThrow(
             "Cookie 'http_only' is http only: expected true to be false"
@@ -511,7 +510,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('domain1').returns({ domain: 'domain1' })
         getCookieStub.withArgs('domain2').returns({ domain: 'domain2' })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'domain1', undefined, 'domain1')).not.toThrow()
         expect(() => def.exec(clientMock, 'domain2', undefined, 'domain1')).toThrow(
@@ -535,7 +534,7 @@ describe('extensions > http_api > definitions', () => {
 
         getCookieStub.withArgs('domain1').returns({ domain: 'domain1' })
         getCookieStub.withArgs('domain2').returns({ domain: 'domain2' })
-        const clientMock = { httpApiClient: { getCookie: getCookieStub } }
+        const clientMock = { httpApi: { getCookie: getCookieStub } }
 
         expect(() => def.exec(clientMock, 'domain1', 'not ', 'domain1')).toThrow(
             `Cookie 'domain1' domain is 'domain1': expected 'domain1' to not equal 'domain1'`
@@ -550,9 +549,9 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('I reset http client')
         def.shouldMatch('reset http client')
 
-        const clientMock = { httpApiClient: { reset: resetStub } }
+        const clientMock = { httpApi: { reset: resetStub } }
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.reset.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.reset.calledOnce).toBeTruthy()
     })
 
     test('perform a request', () => {
@@ -580,11 +579,11 @@ describe('extensions > http_api > definitions', () => {
         def.shouldMatch('dump response body')
 
         const clientMock = {
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
         getResponseStub.returns({ body: '' })
         def.exec(clientMock)
-        expect(clientMock.httpApiClient.getResponse.calledOnce).toBeTruthy()
+        expect(clientMock.httpApi.getResponse.calledOnce).toBeTruthy()
     })
 
     test('check response HTTP status code', () => {
@@ -599,7 +598,7 @@ describe('extensions > http_api > definitions', () => {
 
         getResponseStub.onFirstCall().returns({ statusCode: 200 })
         getResponseStub.onSecondCall().returns({ statusCode: 400 })
-        const clientMock = { httpApiClient: { getResponse: getResponseStub } }
+        const clientMock = { httpApi: { getResponse: getResponseStub } }
 
         expect(() => def.exec(clientMock, '200')).not.toThrow()
         expect(() => def.exec(clientMock, '200')).toThrow(
@@ -618,7 +617,7 @@ describe('extensions > http_api > definitions', () => {
 
         getResponseStub.onFirstCall().returns({ statusCode: 200 })
         getResponseStub.onSecondCall().returns({ statusCode: 500 })
-        const clientMock = { httpApiClient: { getResponse: getResponseStub } }
+        const clientMock = { httpApi: { getResponse: getResponseStub } }
 
         expect(() => def.exec(clientMock, 'ok')).not.toThrow()
         expect(() => def.exec(clientMock, 'ok')).toThrow(
@@ -657,7 +656,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
         const spec = [
             {
@@ -695,7 +694,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -732,7 +731,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -777,7 +776,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -822,7 +821,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -871,7 +870,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -913,7 +912,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -954,7 +953,7 @@ describe('extensions > http_api > definitions', () => {
         })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         const spec = [
@@ -1001,7 +1000,7 @@ describe('extensions > http_api > definitions', () => {
 
         getResponseStub.onFirstCall().returns({ body: { property: ['a', 'b', 'c'] } })
         getResponseStub.onSecondCall().returns({ body: { property: ['a', 'b'] } })
-        const clientMock = { httpApiClient: { getResponse: getResponseStub } }
+        const clientMock = { httpApi: { getResponse: getResponseStub } }
 
         expect(() => def.exec(clientMock, '3', 'property')).not.toThrow()
         expect(() => def.exec(clientMock, '3', 'property')).toThrow(`expected 2 to equal 3`)
@@ -1019,7 +1018,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onFirstCall().returns({ statusCode: 200, body: snapshot })
         getResponseStub.onSecondCall().returns({ statusCode: 200, body: { app: true } })
         const worldMock = {
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
             fixtures: { load: loadFixturesStub },
         }
         loadFixturesStub.resolves(snapshot)
@@ -1062,7 +1061,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() =>
@@ -1097,7 +1096,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() =>
@@ -1132,7 +1131,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() =>
@@ -1165,7 +1164,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() => def.exec(clientMock, 'Content-Type', 'not ', 'contain', 'json')).toThrow(
@@ -1196,7 +1195,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() =>
@@ -1231,7 +1230,7 @@ describe('extensions > http_api > definitions', () => {
         getResponseStub.onThirdCall().returns({ headers: { 'another-header': 'application/json' } })
         const clientMock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: { getResponse: getResponseStub },
+            httpApi: { getResponse: getResponseStub },
         }
 
         expect(() =>

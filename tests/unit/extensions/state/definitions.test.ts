@@ -1,8 +1,8 @@
 import * as helper from '../definitions_helper'
-import { install } from '../../../../src/extensions/state/definitions'
 import { createSandbox, SinonStub } from 'sinon'
-import { state } from '../../../../src/extensions/state'
+import { install, State } from '../../../../src/extensions/state'
 
+const state = State.getInstance()
 describe('extensions > state > definitions', () => {
     const sandbox = createSandbox()
     let setStateStub: SinonStub, clearStateStub: SinonStub, dumpStateStub: SinonStub

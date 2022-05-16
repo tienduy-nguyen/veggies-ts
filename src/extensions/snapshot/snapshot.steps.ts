@@ -1,18 +1,18 @@
 import { DataTable, Then } from '@cucumber/cucumber'
 import _ from 'lodash'
-import { httpApiClient } from '../http_api'
-import { state } from '../state'
-import { snapshot } from './snapshot'
-import { cli } from '../cli'
-import * as fileSystem from '../file_system'
 import { ObjectFieldSpec } from '../../core/core_types'
+import { HttpApi } from '../http_api'
+import { FileSystem } from '../file_system'
+import { Cli } from '../cli'
+import { Snapshot } from './index'
+import { State } from '../state'
 
-export const install = (): void => {
+export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: State): void => {
     /**
      * Checking if an http response body match a snapshot
      */
     Then(/^response body should match snapshot$/, function (): void {
-        snapshot.expectToMatch(httpApiClient.getResponse()?.body)
+        snapshot.expectToMatch(httpApi.getResponse()?.body)
     })
 
     /**
@@ -30,7 +30,7 @@ export const install = (): void => {
             )
         }
 
-        snapshot.expectToMatchJson(httpApiClient.getResponse()?.body, spec)
+        snapshot.expectToMatchJson(httpApi.getResponse()?.body, spec)
     })
 
     /**
@@ -67,7 +67,7 @@ export const install = (): void => {
      * Allow to omit field by checking their type or if they contain a value
      */
     Then(/^file (.+) should match snapshot$/, function (file: string): Promise<void> {
-        return fileSystem.getFileContent(cli.getCwd(), file).then((content) => {
+        return FileSystem.getFileContent(cli.getCwd(), file).then((content) => {
             snapshot.expectToMatch(content)
         })
     })
@@ -88,7 +88,7 @@ export const install = (): void => {
                 )
             }
 
-            return fileSystem.getFileContent(cli.getCwd(), file).then((content) => {
+            return FileSystem.getFileContent(cli.getCwd(), file).then((content) => {
                 const parsedContent = JSON.parse(content)
                 snapshot.expectToMatchJson(parsedContent, spec)
             })

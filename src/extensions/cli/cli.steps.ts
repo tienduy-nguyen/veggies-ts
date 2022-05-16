@@ -1,8 +1,8 @@
 import { DataTable, Given, Then, When } from '@cucumber/cucumber'
 import { expect } from 'chai'
-import { cli } from './'
+import { Cli } from '.'
 
-export const install = (): void => {
+export const install = (cli: Cli): void => {
     Given(/^(?:I )?set (?:working directory|cwd) to (.+)$/, function (cwd: string) {
         cli.setCwd(cwd)
     })

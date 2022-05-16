@@ -636,9 +636,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:8.2.0":
-  version: 8.2.0
-  resolution: "@cucumber/cucumber@npm:8.2.0"
+"@cucumber/cucumber@npm:8.2.1":
+  version: 8.2.1
+  resolution: "@cucumber/cucumber@npm:8.2.1"
   dependencies:
     "@cspotcode/source-map-support": ^0.8.0
     "@cucumber/ci-environment": 9.0.4
@@ -678,7 +678,7 @@ __metadata:
     yup: ^0.32.11
   bin:
     cucumber-js: bin/cucumber.js
-  checksum: 1db4076e4444b98ae199df9b8bd1bd3f94a61598d9170bc61f59f538a064146cd5cd2f6f81f135b033054985326ad4a921a90d833c74cc23fcaa26c80c5b945d
+  checksum: e0140150b3243a75e27952c3366a2383f0f28e2b878effa1f29dab4d5050a88a3a47bc74b305fd426bfe164363f011da928b84b35c8ab05e4739c97803efe39b
   languageName: node
   linkType: hard
 
@@ -7952,7 +7952,7 @@ __metadata:
   resolution: "veggies-ts@workspace:."
   dependencies:
     "@commitlint/config-conventional": ^16.2.4
-    "@cucumber/cucumber": 8.2.0
+    "@cucumber/cucumber": 8.2.1
     "@swc/core": ^1.2.183
     "@swc/jest": ^0.2.21
     "@types/chai": 4.3.1
@@ -7998,8 +7998,6 @@ __metadata:
     tough-cookie: 4.0.0
     ts-node: ^10.7.0
     typescript: ^4.6.4
-  peerDependencies:
-    "@cucumber/cucumber": ">=7.0.0"
   bin:
     veggies: ./bin/veggies.js
   languageName: unknown

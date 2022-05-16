@@ -1,10 +1,10 @@
 import { World } from '@cucumber/cucumber'
 import { State } from '../extensions/state'
-import { FileSystem } from '../extensions/file_system/file_system_types'
-import { Cli } from '../extensions/cli'
 import { Fixtures } from '../extensions/fixtures'
-import { HttpApiClient } from '../extensions/http_api'
+import { HttpApi } from '../extensions/http_api'
 import { Snapshot } from '../extensions/snapshot'
+import { FileSystem } from '../extensions/file_system'
+import { Cli } from '../extensions/cli'
 
 export type CastFunctions = Record<string, CastFunction>
 
@@ -29,7 +29,7 @@ export type VeggiesWorld = Partial<World> & {
     fixtures?: Fixtures
     fileSystem?: FileSystem
     cli?: Cli
-    httpApiClient?: HttpApiClient
+    httpApi?: HttpApi
     snapshot?: Snapshot
 }
 

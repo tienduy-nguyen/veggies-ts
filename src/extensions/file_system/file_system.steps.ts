@@ -1,21 +1,21 @@
 import { Given, Then } from '@cucumber/cucumber'
 import { expect } from 'chai'
-import { cli } from '../cli'
-import * as fileSystem from './file_system'
+import { Cli } from '../cli'
+import { FileSystem } from './index'
 
-export const install = (): void => {
+export const install = (cli: Cli): void => {
     /**
      * Creating a directory.
      */
     Given(/^(?:I )?create directory (.+)$/, function (directory: string) {
-        return fileSystem.createDirectory(cli.getCwd(), directory)
+        return FileSystem.createDirectory(cli.getCwd(), directory)
     })
 
     /**
      * Remove a file or directory.
      */
     Given(/^(?:I )?remove (?:file|directory) (.+)$/, function (fileOrDirectory: string) {
-        return fileSystem.remove(cli.getCwd(), fileOrDirectory)
+        return FileSystem.remove(cli.getCwd(), fileOrDirectory)
     })
 
     /**
@@ -24,7 +24,7 @@ export const install = (): void => {
     Then(
         /^(file|directory) (.+) should (not )?exist$/,
         function (type: string, file: string, flag: string) {
-            return fileSystem.getFileInfo(cli.getCwd(), file).then((info) => {
+            return FileSystem.getFileInfo(cli.getCwd(), file).then((info) => {
                 if (flag === 'not ') {
                     expect(info, `${type} '${file}' exists`).to.be.null
                 } else {
@@ -45,8 +45,7 @@ export const install = (): void => {
     Then(
         /^file (.+) content should (not )?(equal|contain|match) (.+)$/,
         function (file: string, flag: string, comparator: string, expectedValue: string) {
-            return fileSystem
-                .getFileContent(cli.getCwd(), file)
+            return FileSystem.getFileContent(cli.getCwd(), file)
                 .then((content) => {
                     let expectFn = expect(
                         content,

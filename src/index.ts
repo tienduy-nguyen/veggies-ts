@@ -20,6 +20,5 @@ export { state, fixtures, httpApi, cli, fileSystem, snapshot, cast, assertions }
 // All types
 //**********************************************************************************************************************
 export * from './core/core_types'
-export * from './extensions/file_system/file_system_types'
 export * from './extensions/http_api/http_api_types'
 export * from './extensions/snapshot/snapshot_types'

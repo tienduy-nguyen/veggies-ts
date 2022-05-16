@@ -1,5 +1,5 @@
 import * as clean from '../../../../src/extensions/snapshot/clean'
-import * as snapshotAction from '../../../../src/extensions/snapshot/snapshot_actions'
+import * as utils from '../../../../src/extensions/snapshot/utils'
 import { createSandbox, SinonStub } from 'sinon'
 
 describe('extensions > snapshot', () => {
@@ -31,8 +31,8 @@ describe('extensions > snapshot', () => {
         let readSnapshotFileStub: SinonStub, writeSnapshotFileStub: SinonStub
 
         beforeAll(() => {
-            readSnapshotFileStub = sandbox.stub(snapshotAction, 'readSnapshotFile')
-            writeSnapshotFileStub = sandbox.stub(snapshotAction, 'writeSnapshotFile')
+            readSnapshotFileStub = sandbox.stub(utils, 'readSnapshotFile')
+            writeSnapshotFileStub = sandbox.stub(utils, 'writeSnapshotFile')
         })
 
         afterEach(() => sandbox.reset())

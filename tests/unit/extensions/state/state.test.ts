@@ -1,4 +1,6 @@
-import { state } from '../../../../src/extensions/state'
+import { State } from '../../../../src/extensions/state'
+
+const state = State.getInstance()
 
 describe('extensions > state > state', () => {
     test('should return null value', () => {

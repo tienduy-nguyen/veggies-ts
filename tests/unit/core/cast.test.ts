@@ -1,5 +1,5 @@
 import * as Cast from '../../../src/core/cast'
-import { CastFunction, CastType } from '../../../src/core/core_types'
+import { CastFunction, CastType } from '../../../src'
 
 describe('core > cast', () => {
     test('cast nulls', () => {

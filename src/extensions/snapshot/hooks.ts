@@ -2,9 +2,9 @@ import { Before, BeforeAll, AfterAll } from '@cucumber/cucumber'
 
 import * as clean from './clean'
 import * as cmdOptions from './cmdOptions'
-import { snapshot } from './snapshot'
 import { ScenarioInfos } from './snapshot_types'
 import * as statistics from './statistics'
+import { Snapshot } from './index'
 
 export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): number | undefined => {
     const currentScenarioId = scenarioInfos.pickle.astNodeIds[0]
@@ -20,7 +20,7 @@ export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): numb
  * @module extensions/fixtures/hooks
  */
 
-export const install = (): void => {
+export const install = (snapshot: Snapshot): void => {
     Before(function (scenarioInfos) {
         const file = scenarioInfos.gherkinDocument.uri
         const line = getCurrentScenarioLineNumber(scenarioInfos)

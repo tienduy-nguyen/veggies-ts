@@ -2,7 +2,7 @@ import { registerExtension } from '../../core/registry'
 import { VeggiesWorld } from '../../core/core_types'
 import { SnapshotOptions } from '../..'
 import * as cmdOptions from './cmdOptions'
-import { Snapshot } from './snapshot'
+import { Snapshot } from '.'
 
 export const extendWorld = (world: VeggiesWorld, options?: SnapshotOptions): void => {
     options = { ...cmdOptions, ...options }

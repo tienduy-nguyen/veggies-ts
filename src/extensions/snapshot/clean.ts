@@ -4,9 +4,9 @@
 
 import _ from 'lodash'
 
-import * as snapshotActions from './snapshot_actions'
 import * as fileSystem from './file_system'
 import * as statistics from './statistics'
+import { readSnapshotFile, writeSnapshotFile } from './utils'
 
 let _snapshots: Record<string, string[]> = {}
 
@@ -44,9 +44,9 @@ export const cleanSnapshots = (): void => {
             return true
         }
 
-        const content = snapshotActions.readSnapshotFile(file)
+        const content = readSnapshotFile(file)
         const newContent = _.pick(content, snapshotNames)
-        snapshotActions.writeSnapshotFile(file, newContent)
+        writeSnapshotFile(file, newContent)
 
         const omittedContent = _.omit(content, snapshotNames)
 

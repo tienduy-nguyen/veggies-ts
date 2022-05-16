@@ -1,10 +1,16 @@
 import * as helper from '../definitions_helper'
-import * as definitions from '../../../../src/extensions/snapshot/definitions'
+import * as snapshotSteps from '../../../../src/extensions/snapshot/snapshot.steps'
 import { createSandbox, SinonStub } from 'sinon'
-import { snapshot } from '../../../../src/extensions/snapshot'
-import { httpApiClient } from '../../../../src/extensions/http_api'
-import * as fileSystem from '../../../../src/extensions/file_system/file_system'
-import { cli } from '../../../../src/extensions/cli'
+import { Snapshot } from '../../../../src/extensions/snapshot'
+import { HttpApi } from '../../../../src/extensions/http_api'
+import { Cli } from '../../../../src/extensions/cli'
+import { FileSystem } from '../../../../src/extensions/file_system'
+import { State } from '../../../../src/extensions/state'
+
+const snapshot = Snapshot.getInstance()
+const cli = Cli.getInstance()
+const httpApi = HttpApi.getInstance()
+const state = State.getInstance()
 
 describe('extensions > snapshot > definitions', () => {
     const sandbox = createSandbox()
@@ -18,13 +24,13 @@ describe('extensions > snapshot > definitions', () => {
     beforeAll(() => {
         expectToMatchStub = sandbox.stub(snapshot, 'expectToMatch')
         expectToMatchJsonStub = sandbox.stub(snapshot, 'expectToMatchJson')
-        getResponseStub = sandbox.stub(httpApiClient, 'getResponse')
-        getFileContentStub = sandbox.stub(fileSystem, 'getFileContent')
+        getResponseStub = sandbox.stub(httpApi, 'getResponse')
+        getFileContentStub = sandbox.stub(FileSystem, 'getFileContent')
         getCwdStub = sandbox.stub(cli, 'getCwd')
         getOutputStub = sandbox.stub(cli, 'getOutput')
     })
     beforeEach(() => {
-        definitions.install()
+        snapshotSteps.install(httpApi, cli, snapshot, state)
     })
 
     afterEach(() => {
@@ -42,7 +48,7 @@ describe('extensions > snapshot > definitions', () => {
         const content = 'test'
 
         const mock = {
-            httpApiClient: {
+            httpApi: {
                 getResponse: getResponseStub,
             },
             snapshot: { expectToMatch: expectToMatchStub },
@@ -63,7 +69,7 @@ describe('extensions > snapshot > definitions', () => {
 
         const mock = {
             state: { populate: (v: string): string => v },
-            httpApiClient: {
+            httpApi: {
                 getResponse: getResponseStub,
             },
             snapshot: { expectToMatchJson: expectToMatchJsonStub },
