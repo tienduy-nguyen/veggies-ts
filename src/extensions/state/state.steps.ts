@@ -1,17 +1,17 @@
 import { Given, When } from '@cucumber/cucumber'
-import { State } from '.'
 import * as Cast from '../../core/cast'
+import { VeggiesWorld } from '../../core/core_types'
 
-export const install = (state: State): void => {
+export const install = (world: VeggiesWorld): void => {
     Given(/^(?:I )?set state (.+) to (.+)$/, function (key: string, value: string) {
-        state.set(key, Cast.value(value))
+        world.state?.set(key, Cast.value(value))
     })
 
     When(/^(?:I )?clear state$/, function () {
-        state.clear()
+        world.state?.clear()
     })
 
     When(/^(?:I )?dump state$/, function () {
-        console.log(state.dump()) // eslint-disable-line no-console
+        console.log(world.state?.dump()) // eslint-disable-line no-console
     })
 }

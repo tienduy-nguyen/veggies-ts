@@ -9,7 +9,7 @@ import { Cookie } from 'tough-cookie'
 import request, { CookieJar, Response } from 'request'
 import { Headers, RequestOptions } from './http_api_types'
 import Properties = Cookie.Properties
-import { CastedValue } from '../../core/core_types'
+import { CastedValue, VeggiesWorld } from '../../core/core_types'
 import { Fixtures } from '../fixtures'
 import { State } from '../state'
 
@@ -335,15 +335,17 @@ export { extendWorld } from './extend_world'
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // httpApi extension requires state extension
  *     httpApi.extendWorld(this)
+ *
+ *     // install defintions steps
+ *     state.install()
+ *     httpApi.install(this, { baseUrl: 'http://localhost:3000' })
  * })
  *
- * state.install()
- * httpApi.install({ baseUrl: 'http://localhost:3000' })
- *
- * @param {HttpApiConfig} config - Http global conf
+ * @param {baseUrl} string
+ * @param world: VeggiesWorld
  */
-export const install = ({ baseUrl = '' } = {}): void => {
-    httpApiSteps.install(HttpApi.getInstance(), Fixtures.getInstance(), State.getInstance(), {
+export const install = (world: VeggiesWorld, { baseUrl = '' } = {}): void => {
+    httpApiSteps.install(world, {
         baseUrl,
     })
 }

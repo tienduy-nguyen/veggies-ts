@@ -4,8 +4,9 @@ import * as helper from '../definitions_helper'
 import * as cliSteps from '../../../../src/extensions/cli/cli.steps'
 
 const cli = Cli.getInstance()
+const world = { cli }
 
-describe('extensions > cli > definitions', () => {
+describe('extensions > cli > cli.steps', () => {
     const sandbox = createSandbox()
     let setCwdStub: SinonStub,
         setEnvironmentVariablesStub: SinonStub,
@@ -16,17 +17,17 @@ describe('extensions > cli > definitions', () => {
         getExitCodeStub: SinonStub
 
     beforeAll(() => {
-        setCwdStub = sandbox.stub(cli, 'setCwd')
-        setEnvironmentVariablesStub = sandbox.stub(cli, 'setEnvironmentVariables')
-        setEnvironmentVariableStub = sandbox.stub(cli, 'setEnvironmentVariable')
-        scheduleKillProcessStub = sandbox.stub(cli, 'scheduleKillProcess')
-        runStub = sandbox.stub(cli, 'run')
-        getOutputStub = sandbox.stub(cli, 'getOutput')
-        getExitCodeStub = sandbox.stub(cli, 'getExitCode')
+        setCwdStub = sandbox.stub(world.cli, 'setCwd')
+        setEnvironmentVariablesStub = sandbox.stub(world.cli, 'setEnvironmentVariables')
+        setEnvironmentVariableStub = sandbox.stub(world.cli, 'setEnvironmentVariable')
+        scheduleKillProcessStub = sandbox.stub(world.cli, 'scheduleKillProcess')
+        runStub = sandbox.stub(world.cli, 'run')
+        getOutputStub = sandbox.stub(world.cli, 'getOutput')
+        getExitCodeStub = sandbox.stub(world.cli, 'getExitCode')
         sandbox.stub(console, 'log')
     })
 
-    beforeEach(() => cliSteps.install(cli))
+    beforeEach(() => cliSteps.install(world))
 
     afterEach(() => {
         helper.clearContext()

@@ -4,7 +4,7 @@ import * as clean from './clean'
 import * as cmdOptions from './cmdOptions'
 import { ScenarioInfos } from './snapshot_types'
 import * as statistics from './statistics'
-import { Snapshot } from './index'
+import { VeggiesWorld } from '../../core/core_types'
 
 export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): number | undefined => {
     const currentScenarioId = scenarioInfos.pickle.astNodeIds[0]
@@ -20,13 +20,13 @@ export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): numb
  * @module extensions/fixtures/hooks
  */
 
-export const install = (snapshot: Snapshot): void => {
+export const install = (world: VeggiesWorld): void => {
     Before(function (scenarioInfos) {
         const file = scenarioInfos.gherkinDocument.uri
         const line = getCurrentScenarioLineNumber(scenarioInfos)
 
-        snapshot.featureFile = file || ''
-        snapshot.scenarioLine = line ?? -1
+        if (world.snapshot?.featureFile) world.snapshot.featureFile = file || ''
+        if (world.snapshot?.scenarioLine) world.snapshot.scenarioLine = line ?? -1
     })
 
     BeforeAll(function () {

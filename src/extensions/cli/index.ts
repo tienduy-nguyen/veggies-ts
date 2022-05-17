@@ -10,6 +10,7 @@
 import { spawn } from 'child_process'
 import path from 'path'
 import * as cliSteps from './cli.steps'
+import { VeggiesWorld } from '../../core/core_types'
 
 /**
  * Cli extension.
@@ -159,9 +160,9 @@ export class Cli {
             cmd.stdout.on('data', cmdStdout.push.bind(cmdStdout))
             cmd.stderr.on('data', cmdStderr.push.bind(cmdStderr))
 
-            cmd.on('close', (code, signal) => {
+            cmd.on('close', (code) => {
                 if (killer !== undefined) {
-                    if (killed !== true) {
+                    if (!killed) {
                         clearTimeout(killer)
 
                         return reject(
@@ -217,11 +218,13 @@ export { extendWorld } from './extend_world'
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this)
+ *
+ *     // install definition steps
+ *     state.install(this)
+ *     cli.install(this)
  * })
  *
- * state.install()
- * cli.install()
  */
-export const install = (): void => {
-    cliSteps.install(Cli.getInstance())
+export const install = (world: VeggiesWorld): void => {
+    cliSteps.install(world)
 }

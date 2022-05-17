@@ -6,12 +6,11 @@ import * as Cast from '../../core/cast'
 import { assertObjectMatchSpec } from '../../core/assertions'
 import { STATUS_CODES } from 'http'
 import { parseMatchExpression } from './utils'
-import { State } from '../state'
 import { Cookie } from 'tough-cookie'
 import Properties = Cookie.Properties
 import { Response } from 'request'
 import { HttpApi } from './index'
-import { Fixtures } from '../fixtures'
+import { VeggiesWorld } from '../../core/core_types'
 
 const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
 
@@ -20,38 +19,34 @@ const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
  *
  * @param {Object} client
  */
-const mustGetResponse = (client: HttpApi): Response | null => {
-    const response = client.getResponse()
+const mustGetResponse = (client?: HttpApi): Response | undefined => {
+    const response = client?.getResponse()
     expect(response, 'No response available').to.not.be.empty
 
-    return response
+    return response || undefined
 }
 
-export const install = (
-    httpApi: HttpApi,
-    fixtures: Fixtures,
-    state: State,
-    { baseUrl = '' } = {}
-): void => {
+export const install = (world: VeggiesWorld, { baseUrl = '' } = {}): void => {
     /**
      * Setting http headers
      */
     Given(/^(?:I )?set request headers$/, function (step: DataTable) {
-        httpApi.setHeaders(Cast.object(state.populateObject(step.rowsHash())))
+        const headers = Cast.object(world.state?.populateObject(step.rowsHash()))
+        if (headers) world.httpApi?.setHeaders(headers)
     })
 
     /**
      * Setting http option followRedirect to false
      */
     Given(/^(?:I )?do not follow redirect$/, function () {
-        httpApi.setFollowRedirect(false)
+        world.httpApi?.setFollowRedirect(false)
     })
 
     /**
      * Setting http option followRedirect to true
      */
     Given(/^(?:I )?follow redirect$/, function () {
-        httpApi.setFollowRedirect(true)
+        world.httpApi?.setFollowRedirect(true)
     })
 
     /**
@@ -60,8 +55,8 @@ export const install = (
      * "assign" replace or set the given headers, keeping untouched the ones already set
      */
     Given(/^(?:I )?assign request headers$/, function (step: DataTable) {
-        const headers = Cast.object(state.populateObject(step.rowsHash()))
-        _.each(headers, (value, key) => httpApi.setHeader(key, value))
+        const headers = Cast.object(world.state?.populateObject(step.rowsHash()))
+        _.each(headers, (value, key) => world.httpApi?.setHeader(key, value))
     })
 
     /**
@@ -70,7 +65,7 @@ export const install = (
     Given(
         /^(?:I )?set ([a-zA-Z0-9-_]+) request header to (.+)$/,
         function (key: string, value: string) {
-            httpApi.setHeader(key, Cast.value(state.populate(value)))
+            world.httpApi?.setHeader(key, Cast.value(world.state?.populate(value)))
         }
     )
 
@@ -78,22 +73,23 @@ export const install = (
      * Clearing headers
      */
     Given(/^(?:I )?clear request headers/, function () {
-        httpApi.clearHeaders()
+        world.httpApi?.clearHeaders()
     })
 
     /**
      * Setting json payload
      */
     Given(/^(?:I )?set request json body$/, function (step: DataTable) {
-        httpApi.setJsonBody(Cast.object(state.populateObject(step.rowsHash())))
+        const body = Cast.object(world.state?.populateObject(step.rowsHash()))
+        if (body) world.httpApi?.setJsonBody(body)
     })
 
     /**
      * Setting json payload from fixture file
      */
     Given(/^(?:I )?set request json body from (.+)$/, function (fixture: string) {
-        return fixtures.load(fixture).then((data: object) => {
-            httpApi.setJsonBody(data)
+        return world.fixtures?.load(fixture).then((data: object) => {
+            world.httpApi?.setJsonBody(data)
         })
     })
 
@@ -101,15 +97,16 @@ export const install = (
      * Setting form data
      */
     Given(/^(?:I )?set request form body$/, function (step: DataTable) {
-        httpApi.setFormBody(Cast.object(state.populateObject(step.rowsHash())))
+        const body = Cast.object(world.state?.populateObject(step.rowsHash()))
+        if (body) world.httpApi?.setFormBody(body)
     })
 
     /**
      * Setting form data from fixture file
      */
     Given(/^(?:I )?set request form body from (.+)$/, function (fixture: string) {
-        return fixtures.load(fixture).then((data: object) => {
-            httpApi.setFormBody(data)
+        return world.fixtures?.load(fixture).then((data: object) => {
+            world.httpApi?.setFormBody(data)
         })
     })
 
@@ -117,8 +114,8 @@ export const install = (
      * Setting multipart data from fixture file
      */
     Given(/^(?:I )?set request multipart body from (.+)$/, function (fixture: string) {
-        return fixtures.load(fixture).then((data: object) => {
-            httpApi.setMultipartBody(data)
+        return world.fixtures?.load(fixture).then((data: object) => {
+            world.httpApi?.setMultipartBody(data)
         })
     })
 
@@ -126,14 +123,15 @@ export const install = (
      * Clearing body
      */
     Given(/^(?:I )?clear request body$/, function () {
-        httpApi.clearBody()
+        world.httpApi?.clearBody()
     })
 
     /**
      * Setting query parameters
      */
     Given(/^(?:I )?set request query$/, function (step: DataTable) {
-        httpApi.setQuery(Cast.object(state.populateObject(step.rowsHash())))
+        const query = Cast.object(world.state?.populateObject(step.rowsHash()))
+        if (query) world.httpApi?.setQuery(query)
     })
 
     /**
@@ -142,10 +140,10 @@ export const install = (
     Given(
         /^(?:I )?pick response (json|header) (.+) as (.+)$/,
         function (dataSource: string, path: string, key: string) {
-            const response = httpApi.getResponse()
+            const response = world.httpApi?.getResponse()
             const data = dataSource !== 'header' ? response?.body : response?.headers
 
-            state.set(key, _.get(data, path))
+            world.state?.set(key, _.get(data, path))
         }
     )
 
@@ -155,11 +153,11 @@ export const install = (
     Given(
         /^(?:I )?replace(?: placeholder)? (.+) in (.+) to ([^\s]+)(?: with regex options? (.+)?)?$/,
         function (search: string, key: string, replaceValue: string, option?: string) {
-            const newValue = state
-                .get(key)
+            const newValue = world.state
+                ?.get(key)
                 ?.replace(new RegExp(search, option || undefined), replaceValue)
 
-            state.set(key, newValue)
+            world.state?.set(key, newValue)
         }
     )
 
@@ -167,22 +165,22 @@ export const install = (
      * Enabling cookies
      */
     Given(/^(?:I )?enable cookies$/, function () {
-        httpApi.enableCookies()
+        world.httpApi?.enableCookies()
     })
 
     /**
      * Disabling cookies
      */
     Given(/^(?:I )?disable cookies$/, function () {
-        httpApi.disableCookies()
+        world.httpApi?.disableCookies()
     })
 
     /**
      * Setting a cookie from fixture file
      */
     Given(/^(?:I )?set cookie from (.+)$/, function (fixture: string) {
-        return fixtures.load(fixture).then((cookie: Properties) => {
-            httpApi.setCookie(cookie)
+        return world.fixtures?.load(fixture).then((cookie: Properties) => {
+            world.httpApi?.setCookie(cookie)
         })
     })
 
@@ -190,28 +188,28 @@ export const install = (
      * Clearing client request cookies
      */
     Given(/^(?:I )?clear request cookies$/, function () {
-        httpApi.clearRequestCookies()
+        world.httpApi?.clearRequestCookies()
     })
 
     /**
      * Resetting the client's state
      */
     When(/^(?:I )?reset http client$/, function () {
-        httpApi.reset()
+        world.httpApi?.reset()
     })
 
     /**
      * Performing a request
      */
     When(/^(?:I )?(GET|POST|PUT|DELETE|PATCH) (.+)$/, function (method: string, path: string) {
-        return httpApi.makeRequest(method, state.populate(path), baseUrl)
+        return world.httpApi?.makeRequest(method, world.state?.populate(path) || '', baseUrl)
     })
 
     /**
      * Dumping response body
      */
     When(/^(?:I )?dump response body$/, function () {
-        const response = mustGetResponse(httpApi)
+        const response = mustGetResponse(world.httpApi)
         console.log(inspect(response?.body, { colors: true, depth: null })) // eslint-disable-line no-console
     })
 
@@ -219,7 +217,7 @@ export const install = (
      * Dumping response headers
      */
     When(/^(?:I )?dump response headers$/, function () {
-        const response = mustGetResponse(httpApi)
+        const response = mustGetResponse(world.httpApi)
         console.log(response?.headers) // eslint-disable-line no-console
     })
 
@@ -227,15 +225,15 @@ export const install = (
      * Dumping response cookies
      */
     When(/^(?:I )?dump response cookies$/, function () {
-        mustGetResponse(httpApi)
-        console.log(httpApi.getCookies())
+        mustGetResponse(world.httpApi)
+        console.log(world.httpApi?.getCookies())
     })
 
     /**
      * Checking response status code
      */
     Then(/^response status code should be ([1-5]\d\d)$/, function (statusCode: number) {
-        const response = mustGetResponse(httpApi)
+        const response = mustGetResponse(world.httpApi)
         expect(
             response?.statusCode,
             `Expected status code to be: ${statusCode}, but found: ${
@@ -252,7 +250,7 @@ export const install = (
             throw new TypeError(`'${statusMessage}' is not a valid status message`)
         }
 
-        const response = mustGetResponse(httpApi)
+        const response = mustGetResponse(world.httpApi)
         const statusCode = _.findKey(STATUS_CODES, (msg) => _.lowerCase(msg) === statusMessage)
         const statusCodeResponse = response?.statusCode ?? 0
         const currentStatusMessage =
@@ -270,7 +268,7 @@ export const install = (
      * Checking response cookie is present|absent
      */
     Then(/^response should (not )?have an? (.+) cookie$/, function (flag: string, key: string) {
-        const cookie = httpApi.getCookie(key)
+        const cookie = world.httpApi?.getCookie(key)
 
         if (flag == undefined) {
             expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
@@ -283,7 +281,7 @@ export const install = (
      * Checking response cookie is|isn't secure
      */
     Then(/^response (.+) cookie should (not )?be secure$/, function (key: string, flag: string) {
-        const cookie = httpApi.getCookie(key)
+        const cookie = world.httpApi?.getCookie(key)
         expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
         if (flag == undefined) {
@@ -297,7 +295,7 @@ export const install = (
      * Checking response cookie httpOnly
      */
     Then(/^response (.+) cookie should (not )?be http only$/, function (key: string, flag: string) {
-        const cookie = httpApi.getCookie(key)
+        const cookie = world.httpApi?.getCookie(key)
         expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
         if (flag == undefined) {
@@ -313,7 +311,7 @@ export const install = (
     Then(
         /^response (.+) cookie domain should (not )?be (.+)$/,
         function (key: string, flag: string, domain: string) {
-            const cookie = httpApi.getCookie(key)
+            const cookie = world.httpApi?.getCookie(key)
             expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
             const cookieDomain = cookie?.domain || ''
@@ -338,7 +336,7 @@ export const install = (
     Then(
         /^(?:I )?json response should (fully )?match$/,
         function (fully: string, table: DataTable) {
-            const response = mustGetResponse(httpApi)
+            const response = mustGetResponse(world.httpApi)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const body = response?.body
 
@@ -351,7 +349,7 @@ export const install = (
                     : fieldSpec
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return _.assign({}, spec, {
-                    value: state.populate(spec.value),
+                    value: world.state?.populate(spec.value),
                 })
             })
 
@@ -365,7 +363,7 @@ export const install = (
     Then(
         /^(?:I )?should receive a collection of (\d+) items?(?: for path )?(.+)?$/,
         function (size: number, path: string) {
-            const response = mustGetResponse(httpApi)
+            const response = mustGetResponse(world.httpApi)
             const body = response?.body
 
             const array = path != undefined ? _.get(body, path) : body
@@ -378,9 +376,9 @@ export const install = (
      * Verifies that response matches a fixture.
      **/
     Then(/^response should match fixture (.+)$/, function (fixtureId: string) {
-        const response = mustGetResponse(httpApi)
+        const response = mustGetResponse(world.httpApi)
 
-        return fixtures.load(fixtureId).then((snapshot) => {
+        return world.fixtures?.load(fixtureId).then((snapshot) => {
             expect(response?.body).to.deep.equal(snapshot)
         })
     })
@@ -391,7 +389,7 @@ export const install = (
     Then(
         /^response header (.+) should (not )?(equal|contain|match) (.+)$/,
         function (key: string, flag: string, comparator: string, expectedValue: string) {
-            const response = mustGetResponse(httpApi)
+            const response = mustGetResponse(world.httpApi)
             const header = response?.headers[key.toLowerCase()]
 
             expect(header, `Header '${key}' does not exist`).to.not.be.undefined

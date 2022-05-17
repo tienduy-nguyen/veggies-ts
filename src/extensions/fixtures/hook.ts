@@ -1,5 +1,5 @@
 import { Before } from '@cucumber/cucumber'
-import { Fixtures } from '.'
+import { VeggiesWorld } from '../../core/core_types'
 
 /**
  * Registers hooks for the fixtures extension.
@@ -7,8 +7,8 @@ import { Fixtures } from '.'
  * @module extensions/fixtures/hooks
  */
 
-export const install = (fixtures: Fixtures): void => {
+export const install = (world: VeggiesWorld): void => {
     Before(function (scenarioInfos) {
-        fixtures.setFeatureUri(scenarioInfos.gherkinDocument.uri)
+        world.fixtures?.setFeatureUri(scenarioInfos.gherkinDocument.uri)
     })
 }

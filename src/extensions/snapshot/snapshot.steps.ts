@@ -1,18 +1,13 @@
 import { DataTable, Then } from '@cucumber/cucumber'
 import _ from 'lodash'
-import { ObjectFieldSpec } from '../../core/core_types'
-import { HttpApi } from '../http_api'
-import { FileSystem } from '../file_system'
-import { Cli } from '../cli'
-import { Snapshot } from './index'
-import { State } from '../state'
+import { ObjectFieldSpec, VeggiesWorld } from '../../core/core_types'
 
-export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: State): void => {
+export const install = (world: VeggiesWorld): void => {
     /**
      * Checking if an http response body match a snapshot
      */
     Then(/^response body should match snapshot$/, function (): void {
-        snapshot.expectToMatch(httpApi.getResponse()?.body)
+        world.snapshot?.expectToMatch(world.httpApi?.getResponse()?.body)
     })
 
     /**
@@ -25,19 +20,19 @@ export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: S
             spec = table.hashes().map((fieldSpec) =>
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 _.assign({}, fieldSpec, {
-                    value: state.populate(fieldSpec.value),
+                    value: world.state?.populate(fieldSpec.value),
                 })
             )
         }
 
-        snapshot.expectToMatchJson(httpApi.getResponse()?.body, spec)
+        world.snapshot?.expectToMatchJson(world.httpApi?.getResponse()?.body, spec)
     })
 
     /**
      * Checking a cli stdout or stderr match snapshot
      */
     Then(/^(stderr|stdout) output should match snapshot$/, function (type: string): void {
-        snapshot.expectToMatch(cli.getOutput(type))
+        world.snapshot?.expectToMatch(world.cli?.getOutput(type))
     })
 
     /**
@@ -52,13 +47,13 @@ export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: S
                 spec = table.hashes().map((fieldSpec) =>
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                     _.assign({}, fieldSpec, {
-                        value: state.populate(fieldSpec.value),
+                        value: world.state?.populate(fieldSpec.value),
                     })
                 )
             }
 
-            const output = JSON.parse(cli.getOutput(type))
-            snapshot.expectToMatchJson(output, spec)
+            const output = JSON.parse(world.cli?.getOutput(type) || '')
+            world.snapshot?.expectToMatchJson(output, spec)
         }
     )
 
@@ -66,10 +61,9 @@ export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: S
      * Checking that a file content matches the snapshot
      * Allow to omit field by checking their type or if they contain a value
      */
-    Then(/^file (.+) should match snapshot$/, function (file: string): Promise<void> {
-        return FileSystem.getFileContent(cli.getCwd(), file).then((content) => {
-            snapshot.expectToMatch(content)
-        })
+    Then(/^file (.+) should match snapshot$/, async function (file: string): Promise<void> {
+        const content = await world.fileSystem?.getFileContent(world.cli?.getCwd(), file)
+        world.snapshot?.expectToMatch(content)
     })
 
     /**
@@ -77,21 +71,21 @@ export const install = (httpApi: HttpApi, cli: Cli, snapshot: Snapshot, state: S
      */
     Then(
         /^json file (.+) content should match snapshot$/,
-        function (file: string, table: DataTable): Promise<void> {
+        async function (file: string, table: DataTable): Promise<void> {
             let spec: ObjectFieldSpec[] = []
             if (table) {
                 spec = table.hashes().map((fieldSpec) =>
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                     _.assign({}, fieldSpec, {
-                        value: state.populate(fieldSpec.value),
+                        value: world.state?.populate(fieldSpec.value),
                     })
                 )
             }
 
-            return FileSystem.getFileContent(cli.getCwd(), file).then((content) => {
-                const parsedContent = JSON.parse(content)
-                snapshot.expectToMatchJson(parsedContent, spec)
-            })
+            const content =
+                (await world.fileSystem?.getFileContent(world.cli?.getCwd(), file)) || ''
+            const parsedContent = JSON.parse(content)
+            world.snapshot?.expectToMatchJson(parsedContent, spec)
         }
     )
 }

@@ -1,3 +1,7 @@
+declare namespace Intl {
+    function getCanonicalLocales(locales: string | string[]): string[]
+}
+
 declare module 'chai' {
     global {
         export namespace Chai {

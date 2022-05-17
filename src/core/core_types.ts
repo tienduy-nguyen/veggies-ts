@@ -43,3 +43,5 @@ export type ObjectFieldSpec = {
     matcher?: string
     value?: string
 }
+
+export type FalsyString = string | undefined | null

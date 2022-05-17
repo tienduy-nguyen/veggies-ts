@@ -9,7 +9,9 @@ import { State } from '../../../../src/extensions/state'
 const httpApi = HttpApi.getInstance()
 const state = State.getInstance()
 const fixtures = Fixtures.getInstance()
-describe('extensions > http_api > definitions', () => {
+const world = {state, httpApi, fixtures}
+
+describe('extensions > http_api > http_api.steps', () => {
     const sandbox = createSandbox()
     let setHeadersStub: SinonStub,
         setHeaderStub: SinonStub,
@@ -48,7 +50,7 @@ describe('extensions > http_api > definitions', () => {
         stateGetStub = sandbox.stub(state, 'get')
         stateSetStub = sandbox.stub(state, 'set')
     })
-    beforeEach(() => httpApiSteps.install(httpApi, fixtures, state))
+    beforeEach(() => httpApiSteps.install(world))
 
     afterEach(() => {
         helper.clearContext()

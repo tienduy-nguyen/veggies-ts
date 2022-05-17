@@ -11,8 +11,10 @@ const snapshot = Snapshot.getInstance()
 const cli = Cli.getInstance()
 const httpApi = HttpApi.getInstance()
 const state = State.getInstance()
+const fileSystem = FileSystem.getInstance()
+const world = { state, httpApi, cli, snapshot, fileSystem }
 
-describe('extensions > snapshot > definitions', () => {
+describe('extensions > snapshot > snapshot.steps', () => {
     const sandbox = createSandbox()
     let expectToMatchStub: SinonStub,
         expectToMatchJsonStub: SinonStub,
@@ -25,12 +27,12 @@ describe('extensions > snapshot > definitions', () => {
         expectToMatchStub = sandbox.stub(snapshot, 'expectToMatch')
         expectToMatchJsonStub = sandbox.stub(snapshot, 'expectToMatchJson')
         getResponseStub = sandbox.stub(httpApi, 'getResponse')
-        getFileContentStub = sandbox.stub(FileSystem, 'getFileContent')
+        getFileContentStub = sandbox.stub(fileSystem, 'getFileContent')
         getCwdStub = sandbox.stub(cli, 'getCwd')
         getOutputStub = sandbox.stub(cli, 'getOutput')
     })
     beforeEach(() => {
-        snapshotSteps.install(httpApi, cli, snapshot, state)
+        snapshotSteps.install(world)
     })
 
     afterEach(() => {

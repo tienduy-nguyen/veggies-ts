@@ -4,6 +4,7 @@
 
 import _ from 'lodash'
 import { CastedValue, CastFunction, CastFunctions, CastType } from './core_types'
+import { isDefined } from '../utils/type_guards'
 
 /**
  * @name CastFunction
@@ -147,7 +148,9 @@ export const value = (val?: string): CastedValue => {
  * @param {Object} obj - The object containing values to cast
  * @return {Object} The object with casted values
  */
-export const object = (obj: Record<string, string>): Record<string, CastedValue> => {
+export const object = (obj?: Record<string, string>): Record<string, CastedValue> | undefined => {
+    if (!obj) return undefined
+
     const castedObject = {}
     Object.keys(obj).forEach((key: string) => {
         _.set(castedObject, key, value(obj[key]))
@@ -172,8 +175,9 @@ export const object = (obj: Record<string, string>): Record<string, CastedValue>
  *
  * @param {Array.<Object>} objectList
  */
-export const objects = (objectList: Record<string, string>[]): Record<string, unknown>[] =>
-    objectList.map((obj) => object(obj))
+export const objects = (
+    objectList?: Record<string, string>[]
+): Record<string, unknown>[] | undefined => objectList?.map((obj) => object(obj)).filter(isDefined)
 
 /**
  * Casts an array of values.

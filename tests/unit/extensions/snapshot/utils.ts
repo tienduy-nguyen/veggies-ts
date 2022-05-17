@@ -7,7 +7,7 @@ import { diff } from 'jest-diff'
 jest.mock('jest-diff')
 const diffMock = <jest.Mock<typeof diff>>(<unknown>diff)
 
-describe('src > extensions > snapshot > snapshot_actions', () => {
+describe('src > extensions > snapshot > utils', () => {
     describe('prefixSnapshots', () => {
         it('prefixSnapshots give a prefix per scenario name', () => {
             const scenarios = [

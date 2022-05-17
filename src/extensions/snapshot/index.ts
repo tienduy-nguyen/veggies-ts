@@ -13,10 +13,7 @@ import * as clean from './clean'
 import * as statistics from './statistics'
 import * as assertions from '../../core/assertions'
 import { SnapshotContents, SnapshotOptions } from './snapshot_types'
-import { ObjectFieldSpec } from '../../core/core_types'
-import { HttpApi } from '../http_api'
-import { Cli } from '../cli'
-import { State } from '../state'
+import { ObjectFieldSpec, VeggiesWorld } from '../../core/core_types'
 
 export class Snapshot {
     public options: SnapshotOptions = {}
@@ -92,7 +89,7 @@ export class Snapshot {
      * @param {*} expectedContents - Content to compare to snapshot
      * @throws {string} If snapshot and expected content doesn't match, it throws diff between both
      */
-    expectToMatch(expectedContents: SnapshotContents | string): void {
+    expectToMatch(expectedContents?: SnapshotContents | string): void {
         let expectedContent = prettyFormat(expectedContents)
         expectedContent = utils.normalizeNewlines(expectedContent)
         const snapshotsFile = utils.snapshotsPath(this.featureFile, this.options)
@@ -168,16 +165,14 @@ export { extendWorld } from './extend_world'
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
+ *     
+ *     // install defintions
+ *     snapshot.install()
  * })
  *
- * snapshot.install()
+  
  */
-export const install = (): void => {
-    hooks.install(Snapshot.getInstance())
-    snapshotSteps.install(
-        HttpApi.getInstance(),
-        Cli.getInstance(),
-        Snapshot.getInstance(),
-        State.getInstance()
-    )
+export const install = (world: VeggiesWorld): void => {
+    hooks.install(world)
+    snapshotSteps.install(world)
 }

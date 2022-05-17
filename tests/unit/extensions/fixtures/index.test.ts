@@ -10,7 +10,8 @@ const jsonContent = { type: 'json', testing: true }
 const jsContent = { type: 'javascript module', testing: true }
 
 const fixtures = Fixtures.getInstance()
-describe('extensions > fixtures > fixtures', () => {
+
+describe('extensions > fixtures > index', () => {
     afterEach(() => {
         fixtures.reset()
     })
@@ -235,7 +236,7 @@ describe('extensions > fixtures > fixtures', () => {
             await fixtures.loadModule('noent.js').catch((err: { message: string }) => {
                 expect(err.message).toEqual(
                     `An error occurred while loading fixture file: noent.js
-error: Cannot find module '../../../tests/unit/extensions/fixtures/__mocks__/noent.js' from 'src/extensions/fixtures/fixtures.ts'`
+error: Cannot find module '../../../tests/unit/extensions/fixtures/__mocks__/noent.js' from 'src/extensions/fixtures/index.ts'`
                 )
             })
         })

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "typeRoots": ["./node_modules/@types", "src/@types"],
+        "typeRoots": ["./node_modules/@types", "index.d.ts"],
         "types": ["node", "jest", "chai"],
         "incremental": true,
         "noImplicitAny": true,
@@ -23,6 +23,5 @@
         "strictFunctionTypes": false
     },
     "include": ["src/**/*.ts", "tests/**/*.ts", "examples/**/*.ts"],
-    "exclude": [],
-    "files": ["src/@types/chai.d.ts"]
+    "exclude": []
 }

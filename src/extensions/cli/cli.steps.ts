@@ -1,21 +1,21 @@
 import { DataTable, Given, Then, When } from '@cucumber/cucumber'
 import { expect } from 'chai'
-import { Cli } from '.'
+import { VeggiesWorld } from '../../core/core_types'
 
-export const install = (cli: Cli): void => {
+export const install = (world: VeggiesWorld): void => {
     Given(/^(?:I )?set (?:working directory|cwd) to (.+)$/, function (cwd: string) {
-        cli.setCwd(cwd)
+        world.cli?.setCwd(cwd)
     })
 
     Given(
         /^(?:I )?set ([^ ]+) (?:env|environment) (?:var|variable) to (.+)$/,
         function (name: string, value: string) {
-            cli.setEnvironmentVariable(name, value)
+            world.cli?.setEnvironmentVariable(name, value)
         }
     )
 
     Given(/^(?:I )?set (?:env|environment) (?:vars|variables)$/, function (step: DataTable) {
-        cli.setEnvironmentVariables(step.rowsHash())
+        world.cli?.setEnvironmentVariables(step.rowsHash())
     })
 
     Given(
@@ -26,23 +26,23 @@ export const install = (cli: Cli): void => {
                 delay = delay * 1000
             }
 
-            cli.scheduleKillProcess(delay, signal)
+            world.cli?.scheduleKillProcess(delay, signal)
         }
     )
 
     When(/^(?:I )?run command (.+)$/, function (command: string) {
-        return cli.run(command)
+        return world.cli?.run(command)
     })
 
     When(/^(?:I )?dump (stderr|stdout)$/, function (type: string) {
-        const output = cli.getOutput(type)
+        const output = world.cli?.getOutput(type)
         console.log(output) // eslint-disable-line no-console
     })
 
     Then(
         /^(?:the )?(?:command )?exit code should be (\d+)$/,
         function (expectedExitCode: string | number) {
-            const exitCode = cli.getExitCode() ?? -1
+            const exitCode = world.cli?.getExitCode() ?? -1
 
             expect(
                 exitCode,
@@ -52,25 +52,25 @@ export const install = (cli: Cli): void => {
     )
 
     Then(/^(stderr|stdout) should be empty$/, function (type: string) {
-        const output = cli.getOutput(type)
+        const output = world.cli?.getOutput(type)
 
         expect(output).to.be.empty
     })
 
     Then(/^(stderr|stdout) should contain (.+)$/, function (type: string, expected: string) {
-        const output = cli.getOutput(type)
+        const output = world.cli?.getOutput(type)
 
         expect(output).to.contain(expected)
     })
 
     Then(/^(stderr|stdout) should not contain (.+)$/, function (type: string, expected: string) {
-        const output = cli.getOutput(type)
+        const output = world.cli?.getOutput(type)
 
         expect(output).to.not.contain(expected)
     })
 
     Then(/^(stderr|stdout) should match (.+)$/, function (type: string, regex: RegExp | string) {
-        const output = cli.getOutput(type)
+        const output = world.cli?.getOutput(type)
 
         expect(output).to.match(new RegExp(regex, 'gim'))
     })
@@ -78,7 +78,7 @@ export const install = (cli: Cli): void => {
     Then(
         /^(stderr|stdout) should not match (.+)$/,
         function (type: string, regex: RegExp | string) {
-            const output = cli.getOutput(type)
+            const output = world.cli?.getOutput(type)
 
             expect(output).to.not.match(new RegExp(regex, 'gim'))
         }

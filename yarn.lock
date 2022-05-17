@@ -7998,6 +7998,8 @@ __metadata:
     tough-cookie: 4.0.0
     ts-node: ^10.7.0
     typescript: ^4.6.4
+  peerDependencies:
+    "@cucumber/cucumber": ">=7.0.0"
   bin:
     veggies: ./bin/veggies.js
   languageName: unknown

@@ -3,7 +3,6 @@
  */
 
 import * as fileSystemSteps from './file_system.steps'
-import { Cli } from '../cli'
 
 /**
  * The FileSystem helper used by the FileSystem extension.
@@ -13,6 +12,7 @@ import { Cli } from '../cli'
 
 import path from 'path'
 import { mkdirs, readFile, stat, Stats, remove as fsRemove } from 'fs-extra'
+import { FalsyString, VeggiesWorld } from '../../core/core_types'
 
 export class FileSystem {
     private static _instance: FileSystem
@@ -29,11 +29,13 @@ export class FileSystem {
      * @param {string} [encoding='utf8'] - Content encoding
      * @return {Promise.<string>} File content
      */
-    static getFileContent(
-        cwd: string,
+    getFileContent(
+        cwd: FalsyString,
         file: string,
         encoding: BufferEncoding = 'utf8'
-    ): Promise<string> {
+    ): Promise<string | undefined> {
+        if (!cwd) return Promise.resolve(undefined)
+
         return new Promise((resolve, reject) => {
             readFile(path.join(cwd, file), (err, data) => {
                 if (err) return reject(err)
@@ -47,13 +49,14 @@ export class FileSystem {
      *
      * @param {string} cwd  - Current Working Directory
      * @param {string} file - File name
-     * @return {Promise.<fs.Stats|null>} File/directory info or null if file/directory does not exist
+     * @return {Promise.<fs.Stats|undefined>} File/directory info or undefined if file/directory does not exist
      */
-    static getFileInfo(cwd: string, file: string): Promise<Stats | null> {
+    getFileInfo(cwd: FalsyString, file: string): Promise<Stats | undefined> {
+        if (!cwd) return Promise.resolve(undefined)
         return new Promise((resolve, reject) => {
             stat(path.join(cwd, file), (err, stats) => {
                 if (err) {
-                    if (err.code === 'ENOENT') return resolve(null)
+                    if (err.code === 'ENOENT') return resolve(undefined)
                     return reject(err)
                 }
 
@@ -69,8 +72,8 @@ export class FileSystem {
      * @param {string} directory - Directory name
      * @return {Promise.<boolean>}
      */
-    static async createDirectory(cwd: string, directory: string): Promise<void> {
-        await mkdirs(path.join(cwd, directory))
+    async createDirectory(cwd: FalsyString, directory: string): Promise<void> {
+        if (cwd) await mkdirs(path.join(cwd, directory))
     }
 
     /**
@@ -80,8 +83,8 @@ export class FileSystem {
      * @param {string} fileOrDirectory - File or directory name
      * @return {Promise.<boolean>}
      */
-    static async remove(cwd: string, fileOrDirectory: string): Promise<void> {
-        await fsRemove(path.join(cwd, fileOrDirectory))
+    async remove(cwd: FalsyString, fileOrDirectory: string): Promise<void> {
+        if (cwd) await fsRemove(path.join(cwd, fileOrDirectory))
     }
 }
 
@@ -119,12 +122,15 @@ export { extendWorld } from './extend_world'
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this) // fileSystem extension requires cli extension
  *     fileSystem.extendWorld(this)
+ *     
+ *     // install definition steps
+ *     state.install(this)
+ *     cli.install(this)
+ *     fileSystem.install(this)
  * })
  *
- * state.install()
- * cli.install()
- * fileSystem.install()
+
  */
-export const install = (): void => {
-    fileSystemSteps.install(Cli.getInstance())
+export const install = (world: VeggiesWorld): void => {
+    fileSystemSteps.install(world)
 }

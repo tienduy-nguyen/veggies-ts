@@ -7,7 +7,7 @@
  * @return {Promise<any>} Promise that resolves to the loaded module
  */
 async function importer(descriptor) {
-    return await import(descriptor)
+    await import(descriptor)
 }
 
 module.exports = { importer }

@@ -6,8 +6,10 @@ import { FileSystem } from '../../../../src/extensions/file_system'
 import { Cli } from '../../../../src/extensions/cli'
 
 const cli = Cli.getInstance()
+const fileSystem = FileSystem.getInstance()
+const world = { cli, fileSystem }
 
-describe('extensions > file_system', () => {
+describe('extensions > file_system > file_system.steps', () => {
     const sandbox = createSandbox()
     let getFileContentStub: SinonStub,
         getFileInfoStub: SinonStub,
@@ -16,17 +18,17 @@ describe('extensions > file_system', () => {
         getCwdStub: SinonStub
 
     beforeAll(() => {
-        getFileContentStub = sandbox.stub(FileSystem, 'getFileContent')
-        getFileInfoStub = sandbox.stub(FileSystem, 'getFileInfo')
-        createDirectoryStub = sandbox.stub(FileSystem, 'createDirectory')
-        removeStub = sandbox.stub(FileSystem, 'remove')
+        getFileContentStub = sandbox.stub(fileSystem, 'getFileContent')
+        getFileInfoStub = sandbox.stub(fileSystem, 'getFileInfo')
+        createDirectoryStub = sandbox.stub(fileSystem, 'createDirectory')
+        removeStub = sandbox.stub(fileSystem, 'remove')
 
         getCwdStub = stub(cli, 'getCwd')
         getCwdStub.returns('test-cwd')
     })
 
     beforeEach(() => {
-        fileSystemSteps.install(cli)
+        fileSystemSteps.install(world)
         sandbox.reset()
         getCwdStub.resetHistory()
     })
