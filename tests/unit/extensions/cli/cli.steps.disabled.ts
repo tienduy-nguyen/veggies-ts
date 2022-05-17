@@ -4,7 +4,6 @@ import * as helper from '../definitions_helper'
 import * as cliSteps from '../../../../src/extensions/cli/cli.steps'
 
 const cli = Cli.getInstance()
-const world = { cli }
 
 describe('extensions > cli > cli.steps', () => {
     const sandbox = createSandbox()
@@ -17,17 +16,17 @@ describe('extensions > cli > cli.steps', () => {
         getExitCodeStub: SinonStub
 
     beforeAll(() => {
-        setCwdStub = sandbox.stub(world.cli, 'setCwd')
-        setEnvironmentVariablesStub = sandbox.stub(world.cli, 'setEnvironmentVariables')
-        setEnvironmentVariableStub = sandbox.stub(world.cli, 'setEnvironmentVariable')
-        scheduleKillProcessStub = sandbox.stub(world.cli, 'scheduleKillProcess')
-        runStub = sandbox.stub(world.cli, 'run')
-        getOutputStub = sandbox.stub(world.cli, 'getOutput')
-        getExitCodeStub = sandbox.stub(world.cli, 'getExitCode')
+        setCwdStub = sandbox.stub(cli, 'setCwd')
+        setEnvironmentVariablesStub = sandbox.stub(cli, 'setEnvironmentVariables')
+        setEnvironmentVariableStub = sandbox.stub(cli, 'setEnvironmentVariable')
+        scheduleKillProcessStub = sandbox.stub(cli, 'scheduleKillProcess')
+        runStub = sandbox.stub(cli, 'run')
+        getOutputStub = sandbox.stub(cli, 'getOutput')
+        getExitCodeStub = sandbox.stub(cli, 'getExitCode')
         sandbox.stub(console, 'log')
     })
 
-    beforeEach(() => cliSteps.install(world))
+    beforeEach(() => cliSteps.install()) // FIXME: There are some issues about version cucumber for this step: The "from" argument must be of type string. Received type undefined
 
     afterEach(() => {
         helper.clearContext()

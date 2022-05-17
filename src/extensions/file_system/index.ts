@@ -12,7 +12,7 @@ import * as fileSystemSteps from './file_system.steps'
 
 import path from 'path'
 import { mkdirs, readFile, stat, Stats, remove as fsRemove } from 'fs-extra'
-import { FalsyString, VeggiesWorld } from '../../core/core_types'
+import { FalsyString } from '../../core/core_types'
 
 export class FileSystem {
     private static _instance: FileSystem
@@ -122,15 +122,14 @@ export { extendWorld } from './extend_world'
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this) // fileSystem extension requires cli extension
  *     fileSystem.extendWorld(this)
- *     
- *     // install definition steps
- *     state.install(this)
- *     cli.install(this)
- *     fileSystem.install(this)
- * })
  *
-
+ * })
+ * // install definition steps
+ *  state.install()
+ *  cli.install()
+ *  fileSystem.install()
+ *
  */
-export function install(world: VeggiesWorld): void {
-    fileSystemSteps.install(world)
+export function install(): void {
+    fileSystemSteps.install()
 }

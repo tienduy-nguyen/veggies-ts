@@ -9,7 +9,6 @@ import path from 'path'
 import _ from 'lodash'
 import glob from 'fast-glob'
 import { load } from 'js-yaml'
-import { VeggiesWorld } from '../../core/core_types'
 
 export class Fixtures {
     public fixturesDir: string
@@ -234,12 +233,11 @@ export { extendWorld } from './extend_world'
  *
  * setWorldConstructor(function() {
  *     fixtures.extendWorld(this)
- *
- *     // install definition steps
- *     fixtures.install(this)
  * })
+ *  // install definition steps
+ *  fixtures.install()
  *
  */
-export function install(world: VeggiesWorld): void {
-    hook.install(world)
+export function install(): void {
+    hook.install()
 }

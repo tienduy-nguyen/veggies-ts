@@ -7,7 +7,6 @@ import { Cli } from '../../../../src/extensions/cli'
 
 const cli = Cli.getInstance()
 const fileSystem = FileSystem.getInstance()
-const world = { cli, fileSystem }
 
 describe('extensions > file_system > file_system.steps', () => {
     const sandbox = createSandbox()
@@ -28,7 +27,7 @@ describe('extensions > file_system > file_system.steps', () => {
     })
 
     beforeEach(() => {
-        fileSystemSteps.install(world)
+        fileSystemSteps.install()
         sandbox.reset()
         getCwdStub.resetHistory()
     })

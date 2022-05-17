@@ -13,7 +13,7 @@ import * as clean from './clean'
 import * as statistics from './statistics'
 import * as assertions from '../../core/assertions'
 import { SnapshotContents, SnapshotOptions } from './snapshot_types'
-import { ObjectFieldSpec, VeggiesWorld } from '../../core/core_types'
+import { ObjectFieldSpec } from '../../core/core_types'
 
 export class Snapshot {
     public options: SnapshotOptions = {}
@@ -165,14 +165,13 @@ export { extendWorld } from './extend_world'
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
- *     
- *     // install definitions
- *     snapshot.install(this)
  * })
+ * // install definitions
+ * snapshot.install(this)
  *
   
  */
-export function install(world: VeggiesWorld): void {
-    hooks.install(world)
-    snapshotSteps.install(world)
+export function install(): void {
+    hooks.install()
+    snapshotSteps.install()
 }

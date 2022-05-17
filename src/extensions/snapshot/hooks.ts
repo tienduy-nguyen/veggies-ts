@@ -20,20 +20,20 @@ export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): numb
  * @module extensions/fixtures/hooks
  */
 
-export function install(world: VeggiesWorld): void {
-    Before(function (scenarioInfos) {
+export function install(): void {
+    Before(function (this: VeggiesWorld, scenarioInfos) {
         const file = scenarioInfos.gherkinDocument.uri
         const line = getCurrentScenarioLineNumber(scenarioInfos)
 
-        if (world.snapshot?.featureFile) world.snapshot.featureFile = file || ''
-        if (world.snapshot?.scenarioLine) world.snapshot.scenarioLine = line ?? -1
+        if (this.snapshot?.featureFile) this.snapshot.featureFile = file || ''
+        if (this.snapshot?.scenarioLine) this.snapshot.scenarioLine = line ?? -1
     })
 
-    BeforeAll(function () {
+    BeforeAll(function (this: VeggiesWorld) {
         clean.resetReferences()
     })
 
-    AfterAll(function () {
+    AfterAll(function (this: VeggiesWorld) {
         if (cmdOptions.cleanSnapshots) clean.cleanSnapshots()
         statistics.printReport()
     })

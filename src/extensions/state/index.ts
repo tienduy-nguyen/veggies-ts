@@ -5,7 +5,7 @@
 import * as stateSteps from './state.steps'
 
 import _ from 'lodash'
-import { CastedValue, VeggiesWorld } from '../../core/core_types'
+import { CastedValue } from '../../core/core_types'
 
 /**
  * State extension.
@@ -104,6 +104,6 @@ export { extendWorld } from './extend_world'
  * })
  *
  */
-export function install(world: VeggiesWorld): void {
-    stateSteps.install(world)
+export function install(): void {
+    stateSteps.install()
 }

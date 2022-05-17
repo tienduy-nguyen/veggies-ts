@@ -10,7 +10,6 @@
 import { spawn } from 'child_process'
 import path from 'path'
 import * as cliSteps from './cli.steps'
-import { VeggiesWorld } from '../../core/core_types'
 
 /**
  * Cli extension.
@@ -219,12 +218,12 @@ export { extendWorld } from './extend_world'
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this)
  *
- *     // install definition steps
- *     state.install(this)
- *     cli.install(this)
  * })
+ * // install definition steps
+ * state.install()
+ * cli.install()
  *
  */
-export function install(world: VeggiesWorld): void {
-    cliSteps.install(world)
+export function install(): void {
+    cliSteps.install()
 }

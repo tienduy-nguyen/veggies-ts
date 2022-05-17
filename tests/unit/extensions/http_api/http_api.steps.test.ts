@@ -9,7 +9,6 @@ import { State } from '../../../../src/extensions/state'
 const httpApi = HttpApi.getInstance()
 const state = State.getInstance()
 const fixtures = Fixtures.getInstance()
-const world = { state, httpApi, fixtures }
 
 describe('extensions > http_api > http_api.steps', () => {
     const sandbox = createSandbox()
@@ -50,7 +49,7 @@ describe('extensions > http_api > http_api.steps', () => {
         stateGetStub = sandbox.stub(state, 'get')
         stateSetStub = sandbox.stub(state, 'set')
     })
-    beforeEach(() => httpApiSteps.install(world))
+    beforeEach(() => httpApiSteps.install())
 
     afterEach(() => {
         helper.clearContext()
@@ -349,7 +348,12 @@ describe('extensions > http_api > http_api.steps', () => {
         const URLPage = 'http://localhost:300/api/{token}/page'
         const newURLPage = 'http://localhost:300/api/abcd/page'
 
-        const stateMock = { get: stateGetStub, set: stateSetStub }
+        const stateMock = {
+            state: {
+                get: stateGetStub,
+                set: stateSetStub,
+            },
+        }
         stateGetStub.withArgs('URLPage').returns(URLPage)
 
         def.exec(stateMock, '{token}', 'URLPage', 'abcd', 'gi')

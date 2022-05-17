@@ -5,14 +5,11 @@ import { Snapshot } from '../../../../src/extensions/snapshot'
 import { HttpApi } from '../../../../src/extensions/http_api'
 import { Cli } from '../../../../src/extensions/cli'
 import { FileSystem } from '../../../../src/extensions/file_system'
-import { State } from '../../../../src/extensions/state'
 
 const snapshot = Snapshot.getInstance()
 const cli = Cli.getInstance()
 const httpApi = HttpApi.getInstance()
-const state = State.getInstance()
 const fileSystem = FileSystem.getInstance()
-const world = { state, httpApi, cli, snapshot, fileSystem }
 
 describe('extensions > snapshot > snapshot.steps', () => {
     const sandbox = createSandbox()
@@ -32,7 +29,7 @@ describe('extensions > snapshot > snapshot.steps', () => {
         getOutputStub = sandbox.stub(cli, 'getOutput')
     })
     beforeEach(() => {
-        snapshotSteps.install(world)
+        snapshotSteps.install()
     })
 
     afterEach(() => {

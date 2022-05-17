@@ -1,6 +1,6 @@
 {
     "name": "veggies-ts",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "description": "Veggies is an awesome cucumber-js library for API/CLI testing. Great for testing APIs built upon Express, Koa, HAPI and others.",
     "tags": [
         "bdd",

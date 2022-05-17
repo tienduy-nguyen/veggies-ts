@@ -26,27 +26,27 @@ function mustGetResponse(client?: HttpApi): Response | undefined {
     return response || undefined
 }
 
-export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
+export function install({ baseUrl = '' } = {}): void {
     /**
      * Setting http headers
      */
-    Given(/^(?:I )?set request headers$/, function (step: DataTable) {
-        const headers = Cast.object(world.state?.populateObject(step.rowsHash()))
-        if (headers) world.httpApi?.setHeaders(headers)
+    Given(/^(?:I )?set request headers$/, function (this: VeggiesWorld, step: DataTable) {
+        const headers = Cast.object(this.state?.populateObject(step.rowsHash()))
+        if (headers) this.httpApi?.setHeaders(headers)
     })
 
     /**
      * Setting http option followRedirect to false
      */
-    Given(/^(?:I )?do not follow redirect$/, function () {
-        world.httpApi?.setFollowRedirect(false)
+    Given(/^(?:I )?do not follow redirect$/, function (this: VeggiesWorld) {
+        this.httpApi?.setFollowRedirect(false)
     })
 
     /**
      * Setting http option followRedirect to true
      */
-    Given(/^(?:I )?follow redirect$/, function () {
-        world.httpApi?.setFollowRedirect(true)
+    Given(/^(?:I )?follow redirect$/, function (this: VeggiesWorld) {
+        this.httpApi?.setFollowRedirect(true)
     })
 
     /**
@@ -54,9 +54,9 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      * The difference from "set request headers" is that "set" set the whole headers object
      * "assign" replace or set the given headers, keeping untouched the ones already set
      */
-    Given(/^(?:I )?assign request headers$/, function (step: DataTable) {
-        const headers = Cast.object(world.state?.populateObject(step.rowsHash()))
-        _.each(headers, (value, key) => world.httpApi?.setHeader(key, value))
+    Given(/^(?:I )?assign request headers$/, function (this: VeggiesWorld, step: DataTable) {
+        const headers = Cast.object(this.state?.populateObject(step.rowsHash()))
+        _.each(headers, (value, key) => this.httpApi?.setHeader(key, value))
     })
 
     /**
@@ -64,74 +64,83 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Given(
         /^(?:I )?set ([a-zA-Z0-9-_]+) request header to (.+)$/,
-        function (key: string, value: string) {
-            world.httpApi?.setHeader(key, Cast.value(world.state?.populate(value)))
+        function (this: VeggiesWorld, key: string, value: string) {
+            this.httpApi?.setHeader(key, Cast.value(this.state?.populate(value)))
         }
     )
 
     /**
      * Clearing headers
      */
-    Given(/^(?:I )?clear request headers/, function () {
-        world.httpApi?.clearHeaders()
+    Given(/^(?:I )?clear request headers/, function (this: VeggiesWorld) {
+        this.httpApi?.clearHeaders()
     })
 
     /**
      * Setting json payload
      */
-    Given(/^(?:I )?set request json body$/, function (step: DataTable) {
-        const body = Cast.object(world.state?.populateObject(step.rowsHash()))
-        if (body) world.httpApi?.setJsonBody(body)
+    Given(/^(?:I )?set request json body$/, function (this: VeggiesWorld, step: DataTable) {
+        const body = Cast.object(this.state?.populateObject(step.rowsHash()))
+        if (body) this.httpApi?.setJsonBody(body)
     })
 
     /**
      * Setting json payload from fixture file
      */
-    Given(/^(?:I )?set request json body from (.+)$/, function (fixture: string) {
-        return world.fixtures?.load(fixture).then((data: object) => {
-            world.httpApi?.setJsonBody(data)
-        })
-    })
+    Given(
+        /^(?:I )?set request json body from (.+)$/,
+        function (this: VeggiesWorld, fixture: string) {
+            return this.fixtures?.load(fixture).then((data: object) => {
+                this.httpApi?.setJsonBody(data)
+            })
+        }
+    )
 
     /**
      * Setting form data
      */
-    Given(/^(?:I )?set request form body$/, function (step: DataTable) {
-        const body = Cast.object(world.state?.populateObject(step.rowsHash()))
-        if (body) world.httpApi?.setFormBody(body)
+    Given(/^(?:I )?set request form body$/, function (this: VeggiesWorld, step: DataTable) {
+        const body = Cast.object(this.state?.populateObject(step.rowsHash()))
+        if (body) this.httpApi?.setFormBody(body)
     })
 
     /**
      * Setting form data from fixture file
      */
-    Given(/^(?:I )?set request form body from (.+)$/, function (fixture: string) {
-        return world.fixtures?.load(fixture).then((data: object) => {
-            world.httpApi?.setFormBody(data)
-        })
-    })
+    Given(
+        /^(?:I )?set request form body from (.+)$/,
+        function (this: VeggiesWorld, fixture: string) {
+            return this.fixtures?.load(fixture).then((data: object) => {
+                this.httpApi?.setFormBody(data)
+            })
+        }
+    )
 
     /**
      * Setting multipart data from fixture file
      */
-    Given(/^(?:I )?set request multipart body from (.+)$/, function (fixture: string) {
-        return world.fixtures?.load(fixture).then((data: object) => {
-            world.httpApi?.setMultipartBody(data)
-        })
-    })
+    Given(
+        /^(?:I )?set request multipart body from (.+)$/,
+        function (this: VeggiesWorld, fixture: string) {
+            return this.fixtures?.load(fixture).then((data: object) => {
+                this.httpApi?.setMultipartBody(data)
+            })
+        }
+    )
 
     /**
      * Clearing body
      */
-    Given(/^(?:I )?clear request body$/, function () {
-        world.httpApi?.clearBody()
+    Given(/^(?:I )?clear request body$/, function (this: VeggiesWorld) {
+        this.httpApi?.clearBody()
     })
 
     /**
      * Setting query parameters
      */
-    Given(/^(?:I )?set request query$/, function (step: DataTable) {
-        const query = Cast.object(world.state?.populateObject(step.rowsHash()))
-        if (query) world.httpApi?.setQuery(query)
+    Given(/^(?:I )?set request query$/, function (this: VeggiesWorld, step: DataTable) {
+        const query = Cast.object(this.state?.populateObject(step.rowsHash()))
+        if (query) this.httpApi?.setQuery(query)
     })
 
     /**
@@ -139,11 +148,11 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Given(
         /^(?:I )?pick response (json|header) (.+) as (.+)$/,
-        function (dataSource: string, path: string, key: string) {
-            const response = world.httpApi?.getResponse()
+        function (this: VeggiesWorld, dataSource: string, path: string, key: string) {
+            const response = this.httpApi?.getResponse()
             const data = dataSource !== 'header' ? response?.body : response?.headers
 
-            world.state?.set(key, _.get(data, path))
+            this.state?.set(key, _.get(data, path))
         }
     )
 
@@ -152,105 +161,117 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Given(
         /^(?:I )?replace(?: placeholder)? (.+) in (.+) to ([^\s]+)(?: with regex options? (.+)?)?$/,
-        function (search: string, key: string, replaceValue: string, option?: string) {
-            const newValue = world.state
+        function (
+            this: VeggiesWorld,
+            search: string,
+            key: string,
+            replaceValue: string,
+            option?: string
+        ) {
+            const newValue = this.state
                 ?.get(key)
                 ?.replace(new RegExp(search, option || undefined), replaceValue)
 
-            world.state?.set(key, newValue)
+            this.state?.set(key, newValue)
         }
     )
 
     /**
      * Enabling cookies
      */
-    Given(/^(?:I )?enable cookies$/, function () {
-        world.httpApi?.enableCookies()
+    Given(/^(?:I )?enable cookies$/, function (this: VeggiesWorld) {
+        this.httpApi?.enableCookies()
     })
 
     /**
      * Disabling cookies
      */
-    Given(/^(?:I )?disable cookies$/, function () {
-        world.httpApi?.disableCookies()
+    Given(/^(?:I )?disable cookies$/, function (this: VeggiesWorld) {
+        this.httpApi?.disableCookies()
     })
 
     /**
      * Setting a cookie from fixture file
      */
-    Given(/^(?:I )?set cookie from (.+)$/, function (fixture: string) {
-        return world.fixtures?.load(fixture).then((cookie: Properties) => {
-            world.httpApi?.setCookie(cookie)
+    Given(/^(?:I )?set cookie from (.+)$/, function (this: VeggiesWorld, fixture: string) {
+        return this.fixtures?.load(fixture).then((cookie: Properties) => {
+            this.httpApi?.setCookie(cookie)
         })
     })
 
     /**
      * Clearing client request cookies
      */
-    Given(/^(?:I )?clear request cookies$/, function () {
-        world.httpApi?.clearRequestCookies()
+    Given(/^(?:I )?clear request cookies$/, function (this: VeggiesWorld) {
+        this.httpApi?.clearRequestCookies()
     })
 
     /**
      * Resetting the client's state
      */
-    When(/^(?:I )?reset http client$/, function () {
-        world.httpApi?.reset()
+    When(/^(?:I )?reset http client$/, function (this: VeggiesWorld) {
+        this.httpApi?.reset()
     })
 
     /**
      * Performing a request
      */
-    When(/^(?:I )?(GET|POST|PUT|DELETE|PATCH) (.+)$/, function (method: string, path: string) {
-        return world.httpApi?.makeRequest(method, world.state?.populate(path) || '', baseUrl)
-    })
+    When(
+        /^(?:I )?(GET|POST|PUT|DELETE|PATCH) (.+)$/,
+        function (this: VeggiesWorld, method: string, path: string) {
+            return this.httpApi?.makeRequest(method, this.state?.populate(path) || '', baseUrl)
+        }
+    )
 
     /**
      * Dumping response body
      */
-    When(/^(?:I )?dump response body$/, function () {
-        const response = mustGetResponse(world.httpApi)
+    When(/^(?:I )?dump response body$/, function (this: VeggiesWorld) {
+        const response = mustGetResponse(this.httpApi)
         console.log(inspect(response?.body, { colors: true, depth: null })) // eslint-disable-line no-console
     })
 
     /**
      * Dumping response headers
      */
-    When(/^(?:I )?dump response headers$/, function () {
-        const response = mustGetResponse(world.httpApi)
+    When(/^(?:I )?dump response headers$/, function (this: VeggiesWorld) {
+        const response = mustGetResponse(this.httpApi)
         console.log(response?.headers) // eslint-disable-line no-console
     })
 
     /**
      * Dumping response cookies
      */
-    When(/^(?:I )?dump response cookies$/, function () {
-        mustGetResponse(world.httpApi)
-        console.log(world.httpApi?.getCookies())
+    When(/^(?:I )?dump response cookies$/, function (this: VeggiesWorld) {
+        mustGetResponse(this.httpApi)
+        console.log(this.httpApi?.getCookies())
     })
 
     /**
      * Checking response status code
      */
-    Then(/^response status code should be ([1-5]\d\d)$/, function (statusCode: number) {
-        const response = mustGetResponse(world.httpApi)
-        expect(
-            response?.statusCode,
-            `Expected status code to be: ${statusCode}, but found: ${
-                response?.statusCode ?? 'unknown'
-            }`
-        ).to.equal(Number(statusCode))
-    })
+    Then(
+        /^response status code should be ([1-5]\d\d)$/,
+        function (this: VeggiesWorld, statusCode: number) {
+            const response = mustGetResponse(this.httpApi)
+            expect(
+                response?.statusCode,
+                `Expected status code to be: ${statusCode}, but found: ${
+                    response?.statusCode ?? 'unknown'
+                }`
+            ).to.equal(Number(statusCode))
+        }
+    )
 
     /**
      * Checking response status by message
      */
-    Then(/^response status should be (.+)$/, function (statusMessage: string) {
+    Then(/^response status should be (.+)$/, function (this: VeggiesWorld, statusMessage: string) {
         if (!STATUS_MESSAGES.includes(_.lowerCase(statusMessage))) {
             throw new TypeError(`'${statusMessage}' is not a valid status message`)
         }
 
-        const response = mustGetResponse(world.httpApi)
+        const response = mustGetResponse(this.httpApi)
         const statusCode = _.findKey(STATUS_CODES, (msg) => _.lowerCase(msg) === statusMessage)
         const statusCodeResponse = response?.statusCode ?? 0
         const currentStatusMessage =
@@ -267,51 +288,60 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
     /**
      * Checking response cookie is present|absent
      */
-    Then(/^response should (not )?have an? (.+) cookie$/, function (flag: string, key: string) {
-        const cookie = world.httpApi?.getCookie(key)
+    Then(
+        /^response should (not )?have an? (.+) cookie$/,
+        function (this: VeggiesWorld, flag: string, key: string) {
+            const cookie = this.httpApi?.getCookie(key)
 
-        if (flag == undefined) {
-            expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
-        } else {
-            expect(cookie, `A cookie exists for key '${key}'`).to.be.null
+            if (flag == undefined) {
+                expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
+            } else {
+                expect(cookie, `A cookie exists for key '${key}'`).to.be.null
+            }
         }
-    })
+    )
 
     /**
      * Checking response cookie is|isn't secure
      */
-    Then(/^response (.+) cookie should (not )?be secure$/, function (key: string, flag: string) {
-        const cookie = world.httpApi?.getCookie(key)
-        expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
+    Then(
+        /^response (.+) cookie should (not )?be secure$/,
+        function (this: VeggiesWorld, key: string, flag: string) {
+            const cookie = this.httpApi?.getCookie(key)
+            expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
-        if (flag == undefined) {
-            expect(cookie?.secure, `Cookie '${key}' is not secure`).to.be.true
-        } else {
-            expect(cookie?.secure, `Cookie '${key}' is secure`).to.be.false
+            if (flag == undefined) {
+                expect(cookie?.secure, `Cookie '${key}' is not secure`).to.be.true
+            } else {
+                expect(cookie?.secure, `Cookie '${key}' is secure`).to.be.false
+            }
         }
-    })
+    )
 
     /**
      * Checking response cookie httpOnly
      */
-    Then(/^response (.+) cookie should (not )?be http only$/, function (key: string, flag: string) {
-        const cookie = world.httpApi?.getCookie(key)
-        expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
+    Then(
+        /^response (.+) cookie should (not )?be http only$/,
+        function (this: VeggiesWorld, key: string, flag: string) {
+            const cookie = this.httpApi?.getCookie(key)
+            expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
-        if (flag == undefined) {
-            expect(cookie?.httpOnly, `Cookie '${key}' is not http only`).to.be.true
-        } else {
-            expect(cookie?.httpOnly, `Cookie '${key}' is http only`).to.be.false
+            if (flag == undefined) {
+                expect(cookie?.httpOnly, `Cookie '${key}' is not http only`).to.be.true
+            } else {
+                expect(cookie?.httpOnly, `Cookie '${key}' is http only`).to.be.false
+            }
         }
-    })
+    )
 
     /**
      * Checking response cookie domain
      */
     Then(
         /^response (.+) cookie domain should (not )?be (.+)$/,
-        function (key: string, flag: string, domain: string) {
-            const cookie = world.httpApi?.getCookie(key)
+        function (this: VeggiesWorld, key: string, flag: string, domain: string) {
+            const cookie = this.httpApi?.getCookie(key)
             expect(cookie, `No cookie found for key '${key}'`).to.not.be.null
 
             const cookieDomain = cookie?.domain || ''
@@ -335,8 +365,8 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Then(
         /^(?:I )?json response should (fully )?match$/,
-        function (fully: string, table: DataTable) {
-            const response = mustGetResponse(world.httpApi)
+        function (this: VeggiesWorld, fully: string, table: DataTable) {
+            const response = mustGetResponse(this.httpApi)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const body = response?.body
 
@@ -349,7 +379,7 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
                     : fieldSpec
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return _.assign({}, spec, {
-                    value: world.state?.populate(spec.value),
+                    value: this.state?.populate(spec.value),
                 })
             })
 
@@ -362,8 +392,8 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Then(
         /^(?:I )?should receive a collection of (\d+) items?(?: for path )?(.+)?$/,
-        function (size: number, path: string) {
-            const response = mustGetResponse(world.httpApi)
+        function (this: VeggiesWorld, size: number, path: string) {
+            const response = mustGetResponse(this.httpApi)
             const body = response?.body
 
             const array = path != undefined ? _.get(body, path) : body
@@ -375,10 +405,10 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
     /**
      * Verifies that response matches a fixture.
      **/
-    Then(/^response should match fixture (.+)$/, function (fixtureId: string) {
-        const response = mustGetResponse(world.httpApi)
+    Then(/^response should match fixture (.+)$/, function (this: VeggiesWorld, fixtureId: string) {
+        const response = mustGetResponse(this.httpApi)
 
-        return world.fixtures?.load(fixtureId).then((snapshot) => {
+        return this.fixtures?.load(fixtureId).then((snapshot) => {
             expect(response?.body).to.deep.equal(snapshot)
         })
     })
@@ -388,8 +418,14 @@ export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
      */
     Then(
         /^response header (.+) should (not )?(equal|contain|match) (.+)$/,
-        function (key: string, flag: string, comparator: string, expectedValue: string) {
-            const response = mustGetResponse(world.httpApi)
+        function (
+            this: VeggiesWorld,
+            key: string,
+            flag: string,
+            comparator: string,
+            expectedValue: string
+        ) {
+            const response = mustGetResponse(this.httpApi)
             const header = response?.headers[key.toLowerCase()]
 
             expect(header, `Header '${key}' does not exist`).to.not.be.undefined
