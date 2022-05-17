@@ -4,7 +4,7 @@ import { SnapshotOptions } from '../..'
 import * as cmdOptions from './cmdOptions'
 import { Snapshot } from '.'
 
-export const extendWorld = (world: VeggiesWorld, options?: SnapshotOptions): void => {
+export function extendWorld(world: VeggiesWorld, options?: SnapshotOptions): void {
     options = { ...cmdOptions, ...options }
 
     world.snapshot = Snapshot.getInstance(options)

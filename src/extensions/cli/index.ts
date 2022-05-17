@@ -194,7 +194,7 @@ export class Cli {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli } = require('@ekino/veggies')
+ * const { state, cli } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -213,7 +213,7 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli } = require('@ekino/veggies')
+ * const { state, cli } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -225,6 +225,6 @@ export { extendWorld } from './extend_world'
  * })
  *
  */
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     cliSteps.install(world)
 }

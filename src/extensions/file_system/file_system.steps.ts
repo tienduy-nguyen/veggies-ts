@@ -2,7 +2,7 @@ import { Given, Then } from '@cucumber/cucumber'
 import { expect } from 'chai'
 import { VeggiesWorld } from '../../core/core_types'
 
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     /**
      * Creating a directory.
      */

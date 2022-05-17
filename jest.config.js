@@ -6,7 +6,7 @@ module.exports = {
     transform: {
         '^.+\\.(t|j)s$': '@swc/jest',
     },
-    modulePathIgnorePatterns: ['<rootDir>/build'],
+    modulePathIgnorePatterns: ['<rootDir>/lib'],
     collectCoverageFrom: ['src/**/*.ts'],
     coverageDirectory: './coverage',
 }

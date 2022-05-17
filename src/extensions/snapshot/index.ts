@@ -143,7 +143,7 @@ export class Snapshot {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { snapshot } = require('@ekino/veggies')
+ * const { snapshot } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
@@ -161,18 +161,18 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { snapshot } = require('@ekino/veggies')
+ * const { snapshot } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
  *     
- *     // install defintions
- *     snapshot.install()
+ *     // install definitions
+ *     snapshot.install(this)
  * })
  *
   
  */
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     hooks.install(world)
     snapshotSteps.install(world)
 }

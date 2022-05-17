@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "typeRoots": ["./node_modules/@types", "index.d.ts"],
-        "types": ["node", "jest", "chai"],
+        "types": ["node", "jest"],
         "incremental": true,
         "noImplicitAny": true,
         "allowJs": true,

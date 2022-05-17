@@ -304,7 +304,7 @@ export class HttpApi {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, httpApi } = require('@ekino/veggies')
+ * const { state, httpApi } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // httpApi extension requires state extension
@@ -330,21 +330,21 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, httpApi } = require('@ekino/veggies')
+ * const { state, httpApi } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // httpApi extension requires state extension
  *     httpApi.extendWorld(this)
  *
- *     // install defintions steps
- *     state.install()
+ *     // install definitions steps
+ *     state.install(this)
  *     httpApi.install(this, { baseUrl: 'http://localhost:3000' })
  * })
  *
  * @param {baseUrl} string
  * @param world: VeggiesWorld
  */
-export const install = (world: VeggiesWorld, { baseUrl = '' } = {}): void => {
+export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
     httpApiSteps.install(world, {
         baseUrl,
     })

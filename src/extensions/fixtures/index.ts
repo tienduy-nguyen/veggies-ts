@@ -212,7 +212,7 @@ export class Fixtures {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { fixtures } = require('@ekino/veggies')
+ * const { fixtures } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     fixtures.extendWorld(this)
@@ -230,7 +230,7 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { fixtures } = require('@ekino/veggies')
+ * const { fixtures } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     fixtures.extendWorld(this)
@@ -240,6 +240,6 @@ export { extendWorld } from './extend_world'
  * })
  *
  */
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     hook.install(world)
 }

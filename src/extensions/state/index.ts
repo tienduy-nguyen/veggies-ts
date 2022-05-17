@@ -76,7 +76,7 @@ export class State {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state } = require('@ekino/veggies')
+ * const { state } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this)
@@ -94,16 +94,16 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state } = require('@ekino/veggies')
+ * const { state } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this)
  *
- *     // install defintions steps
- *     state.install()
+ *     // install definitions steps
+ *     state.install(this)
  * })
  *
  */
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     stateSteps.install(world)
 }

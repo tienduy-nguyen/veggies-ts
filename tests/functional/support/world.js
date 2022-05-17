@@ -1,4 +1,4 @@
-const { setWorldConstructor, World } = require('@cucumber/cucumber')
+const { setWorldConstructor } = require('@cucumber/cucumber')
 const { cli, snapshot, state } = require('../../../lib')
 
 setWorldConstructor(function () {

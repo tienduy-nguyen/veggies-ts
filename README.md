@@ -76,7 +76,7 @@ Then all you have to do is installing the provided extensions:
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state, fixtures, httpApi, cli } = require('@ekino/veggies')
+const { state, fixtures, httpApi, cli } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -725,7 +725,7 @@ To install the extension, you should add the following snippet to your `world` f
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state } = require('@ekino/veggies')
+const { state } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -783,7 +783,7 @@ To install the extension, you should add the following snippet to your `world` f
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { fixtures } = require('@ekino/veggies')
+const { fixtures } = require('veggies-ts')
 
 setWorldConstructor(function() {
     fixtures.extendWorld(this)
@@ -824,7 +824,7 @@ to your `world` file:
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state, fixtures, httpApi } = require('@ekino/veggies')
+const { state, fixtures, httpApi } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -911,7 +911,7 @@ to your `world` file:
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state, fixtures, cli } = require('@ekino/veggies')
+const { state, fixtures, cli } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -975,7 +975,7 @@ to your `world` file:
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state, fixtures, cli, fileSystem } = require('@ekino/veggies')
+const { state, fixtures, cli, fileSystem } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -1036,7 +1036,7 @@ to your `world` file:
 // /support/world.js
 
 const { setWorldConstructor } = require('@cucumber/cucumber')
-const { state, fixtures, cli, fileSystem, snapshot } = require('@ekino/veggies')
+const { state, fixtures, cli, fileSystem, snapshot } = require('veggies-ts')
 
 setWorldConstructor(function() {
     state.extendWorld(this)
@@ -1085,7 +1085,7 @@ This must be used on gherkin arrays. Based on your array type you have to use:
 For example:
 
 ```javascript
-const { cast } = require('@ekino/veggies')
+const { cast } = require('veggies-ts')
 const { Given, When, Then } = require('@cucumber/cucumber')
 
 Then(/^User data should be$/, (step) => {

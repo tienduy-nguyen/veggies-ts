@@ -19,14 +19,14 @@ const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
  *
  * @param {Object} client
  */
-const mustGetResponse = (client?: HttpApi): Response | undefined => {
+function mustGetResponse(client?: HttpApi): Response | undefined {
     const response = client?.getResponse()
     expect(response, 'No response available').to.not.be.empty
 
     return response || undefined
 }
 
-export const install = (world: VeggiesWorld, { baseUrl = '' } = {}): void => {
+export function install(world: VeggiesWorld, { baseUrl = '' } = {}): void {
     /**
      * Setting http headers
      */

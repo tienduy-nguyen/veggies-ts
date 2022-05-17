@@ -96,7 +96,7 @@ export class FileSystem {
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli, fileSystem } = require('@ekino/veggies')
+ * const { state, cli, fileSystem } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -116,7 +116,7 @@ export { extendWorld } from './extend_world'
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli, fileSystem } = require('@ekino/veggies')
+ * const { state, cli, fileSystem } = require('veggies-ts')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -131,6 +131,6 @@ export { extendWorld } from './extend_world'
  *
 
  */
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     fileSystemSteps.install(world)
 }

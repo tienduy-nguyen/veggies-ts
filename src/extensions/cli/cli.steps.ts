@@ -2,7 +2,7 @@ import { DataTable, Given, Then, When } from '@cucumber/cucumber'
 import { expect } from 'chai'
 import { VeggiesWorld } from '../../core/core_types'
 
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     Given(/^(?:I )?set (?:working directory|cwd) to (.+)$/, function (cwd: string) {
         world.cli?.setCwd(cwd)
     })

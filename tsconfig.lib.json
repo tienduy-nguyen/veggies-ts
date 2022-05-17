@@ -2,8 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "declaration": true,
-        "outDir": "lib",
-        "module": "es2015"
+        "outDir": "lib"
     },
     "include": ["src/**/*.ts"]
 }

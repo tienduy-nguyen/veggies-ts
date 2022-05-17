@@ -2,7 +2,7 @@ import { DataTable, Then } from '@cucumber/cucumber'
 import _ from 'lodash'
 import { ObjectFieldSpec, VeggiesWorld } from '../../core/core_types'
 
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     /**
      * Checking if an http response body match a snapshot
      */

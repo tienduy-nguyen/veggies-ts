@@ -20,7 +20,7 @@ export const getCurrentScenarioLineNumber = (scenarioInfos: ScenarioInfos): numb
  * @module extensions/fixtures/hooks
  */
 
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     Before(function (scenarioInfos) {
         const file = scenarioInfos.gherkinDocument.uri
         const line = getCurrentScenarioLineNumber(scenarioInfos)

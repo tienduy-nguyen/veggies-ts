@@ -7,7 +7,7 @@ import { VeggiesWorld } from '../../core/core_types'
  * @module extensions/fixtures/hooks
  */
 
-export const install = (world: VeggiesWorld): void => {
+export function install(world: VeggiesWorld): void {
     Before(function (scenarioInfos) {
         world.fixtures?.setFeatureUri(scenarioInfos.gherkinDocument.uri)
     })
