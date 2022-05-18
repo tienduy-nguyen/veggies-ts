@@ -9,8 +9,8 @@ import { parseMatchExpression } from './utils'
 import { Cookie } from 'tough-cookie'
 import Properties = Cookie.Properties
 import { Response } from 'request'
-import { HttpApi } from './index'
 import { VeggiesWorld } from '../../core/core_types'
+import { HttpApi } from './http_api'
 
 const STATUS_MESSAGES = _.values(STATUS_CODES).map(_.lowerCase)
 

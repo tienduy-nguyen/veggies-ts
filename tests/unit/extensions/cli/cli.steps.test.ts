@@ -1,7 +1,7 @@
 import { createSandbox, SinonStub } from 'sinon'
-import { Cli } from '../../../../src/extensions/cli'
 import * as helper from '../definitions_helper'
 import * as cliSteps from '../../../../src/extensions/cli/cli.steps'
+import { Cli } from '../../../../src/extensions/cli/cli'
 
 const cli = Cli.getInstance()
 

@@ -1,10 +1,10 @@
 import { World } from '@cucumber/cucumber'
-import { State } from '../extensions/state'
-import { Fixtures } from '../extensions/fixtures'
-import { HttpApi } from '../extensions/http_api'
-import { Snapshot } from '../extensions/snapshot'
-import { FileSystem } from '../extensions/file_system'
-import { Cli } from '../extensions/cli'
+import { Cli } from '../extensions/cli/cli'
+import { FileSystem } from '../extensions/file_system/file_system'
+import { Fixtures } from '../extensions/fixtures/fixtures'
+import { HttpApi } from '../extensions/http_api/http_api'
+import { Snapshot } from '../extensions/snapshot/snapshot'
+import { State } from '../extensions/state/state'
 
 export type CastFunctions = Record<string, CastFunction>
 

@@ -1,12 +1,9 @@
 import { registerExtension } from '../../core/registry'
 import { VeggiesWorld } from '../../core/core_types'
-import { SnapshotOptions } from '../..'
-import * as cmdOptions from './cmdOptions'
-import { Snapshot } from '.'
+import { Snapshot } from './snapshot'
 
-export function extendWorld(world: VeggiesWorld, options?: SnapshotOptions): void {
-    options = { ...cmdOptions, ...options }
-
-    world.snapshot = Snapshot.getInstance(options)
+function extendWorld(world: VeggiesWorld): void {
+    world.snapshot = Snapshot.getInstance()
     registerExtension(world, 'snapshot')
 }
+export = extendWorld

@@ -1,4 +1,4 @@
-import { State } from '../../../../src/extensions/state'
+import { State } from '../../../../src/extensions/state/state'
 
 const state = State.getInstance()
 

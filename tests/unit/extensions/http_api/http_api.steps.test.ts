@@ -2,9 +2,9 @@ import { createSandbox, SinonStub } from 'sinon'
 
 import * as helper from '../definitions_helper'
 import * as httpApiSteps from '../../../../src/extensions/http_api/http_api.steps'
-import { HttpApi } from '../../../../src/extensions/http_api'
-import { Fixtures } from '../../../../src/extensions/fixtures'
-import { State } from '../../../../src/extensions/state'
+import { HttpApi } from '../../../../src/extensions/http_api/http_api'
+import { State } from '../../../../src/extensions/state/state'
+import { Fixtures } from '../../../../src/extensions/fixtures/fixtures'
 
 const httpApi = HttpApi.getInstance()
 const state = State.getInstance()

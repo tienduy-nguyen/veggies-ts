@@ -25,8 +25,10 @@ export function install(): void {
         const file = scenarioInfos.gherkinDocument.uri
         const line = getCurrentScenarioLineNumber(scenarioInfos)
 
-        if (this.snapshot?.featureFile) this.snapshot.featureFile = file || ''
-        if (this.snapshot?.scenarioLine) this.snapshot.scenarioLine = line ?? -1
+        if (this.snapshot) {
+            this.snapshot.featureFile = file || ''
+            this.snapshot.scenarioLine = line ?? -1
+        }
     })
 
     BeforeAll(function (this: VeggiesWorld) {

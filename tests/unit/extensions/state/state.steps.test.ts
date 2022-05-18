@@ -1,6 +1,7 @@
 import * as helper from '../definitions_helper'
 import { createSandbox, SinonStub } from 'sinon'
-import { install, State } from '../../../../src/extensions/state'
+import { install } from '../../../../src/extensions/state'
+import { State } from '../../../../src/extensions/state/state'
 
 const state = State.getInstance()
 describe('extensions > state > definitions', () => {

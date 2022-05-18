@@ -1,8 +1,8 @@
 import yaml from 'js-yaml'
-import { Fixtures } from '../../../../src/extensions/fixtures'
 import { createSandbox, SinonStub, stub } from 'sinon'
 import fs from 'fs'
 import path from 'path'
+import { Fixtures } from '../../../../src/extensions/fixtures/fixtures'
 
 const yamlContent = { type: 'yaml', testing: true }
 const textContent = 'This data were loaded from mocked text file'
@@ -236,7 +236,7 @@ describe('extensions > fixtures > index', () => {
             await fixtures.loadModule('noent.js').catch((err: { message: string }) => {
                 expect(err.message).toEqual(
                     `An error occurred while loading fixture file: noent.js
-error: Cannot find module '../../../tests/unit/extensions/fixtures/__mocks__/noent.js' from 'src/extensions/fixtures/index.ts'`
+error: Cannot find module '../../../tests/unit/extensions/fixtures/__mocks__/noent.js' from 'src/extensions/fixtures/fixtures.ts'`
                 )
             })
         })

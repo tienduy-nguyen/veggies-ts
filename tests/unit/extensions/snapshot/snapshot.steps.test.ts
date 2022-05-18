@@ -1,10 +1,10 @@
 import * as helper from '../definitions_helper'
 import * as snapshotSteps from '../../../../src/extensions/snapshot/snapshot.steps'
 import { createSandbox, SinonStub } from 'sinon'
-import { Snapshot } from '../../../../src/extensions/snapshot'
-import { HttpApi } from '../../../../src/extensions/http_api'
-import { Cli } from '../../../../src/extensions/cli'
-import { FileSystem } from '../../../../src/extensions/file_system'
+import { Snapshot } from '../../../../src/extensions/snapshot/snapshot'
+import { Cli } from '../../../../src/extensions/cli/cli'
+import { HttpApi } from '../../../../src/extensions/http_api/http_api'
+import { FileSystem } from '../../../../src/extensions/file_system/file_system'
 
 const snapshot = Snapshot.getInstance()
 const cli = Cli.getInstance()
