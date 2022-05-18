@@ -1,4 +1,4 @@
-@snapshot
+@snapshot @offline
 Feature: Using snapshot definitions
 
     Scenario: Snapshot testing on an api

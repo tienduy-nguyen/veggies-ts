@@ -28,9 +28,9 @@ export function install(): void {
         function (this: VeggiesWorld, type: string, file: string, flag: string) {
             return this.fileSystem?.getFileInfo(this.cli?.getCwd(), file).then((info) => {
                 if (flag === 'not ') {
-                    expect(info, `${type} '${file}' exists`).to.be.null
+                    expect(info, `${type} '${file}' exists`).to.be.undefined
                 } else {
-                    expect(info, `${type} '${file}' does not exist`).not.to.be.null
+                    expect(info, `${type} '${file}' does not exist`).not.to.be.undefined
                     if (type === 'file') {
                         expect(info?.isFile(), `'${file}' is not a file`).to.be.true
                     } else {

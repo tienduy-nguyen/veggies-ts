@@ -4,7 +4,7 @@ import { ObjectFieldSpec, VeggiesWorld } from '../../core/core_types'
 
 export function install(): void {
     /**
-     * Checking if an http response body match a snapshot
+     * Checking if a http response body match a snapshot
      */
     Then(/^response body should match snapshot$/, function (this: VeggiesWorld): void {
         this.snapshot?.expectToMatch(this.httpApi?.getResponse()?.body)

@@ -100,7 +100,7 @@ describe('extensions > file_system > file_system.steps', () => {
 
         getFileInfoStub.withArgs('test-cwd', 'file_exist').resolves({ isFile: () => true })
         getFileInfoStub.withArgs('test-cwd', 'a_directory').resolves({ isFile: () => false })
-        getFileInfoStub.withArgs('test-cwd', 'file_dont_exist').resolves(null)
+        getFileInfoStub.withArgs('test-cwd', 'file_dont_exist').resolves(undefined)
 
         const world = {
             cli: { getCwd: getCwdStub },
@@ -121,7 +121,7 @@ describe('extensions > file_system > file_system.steps', () => {
         ).toBeTruthy()
 
         await expect(def.exec(world, 'file', 'file_dont_exist', undefined)).rejects.toThrow(
-            "file 'file_dont_exist' does not exist: expected null not to be null"
+            "file 'file_dont_exist' does not exist: expected undefined not to be undefined"
         )
         expect(
             world.fileSystem.getFileInfo.calledWithExactly('test-cwd', 'file_dont_exist')
@@ -135,7 +135,7 @@ describe('extensions > file_system > file_system.steps', () => {
 
         getFileInfoStub.withArgs('test-cwd', 'file_exist').resolves({ isFile: () => true })
         getFileInfoStub.withArgs('test-cwd', 'a_directory').resolves({ isFile: () => false })
-        getFileInfoStub.withArgs('test-cwd', 'file_dont_exist').resolves(null)
+        getFileInfoStub.withArgs('test-cwd', 'file_dont_exist').resolves(undefined)
 
         const world = {
             cli: { getCwd: getCwdStub },
@@ -145,12 +145,12 @@ describe('extensions > file_system > file_system.steps', () => {
         expect.assertions(5)
 
         await expect(def.exec(world, 'file', 'file_exist', 'not ')).rejects.toThrow(
-            `file 'file_exist' exists: expected { isFile: [Function isFile] } to be null`
+            `file 'file_exist' exists: expected { isFile: [Function isFile] } to be undefined`
         )
         expect(getFileInfoStub.calledWithExactly('test-cwd', 'file_exist')).toBeTruthy()
 
         await expect(def.exec(world, 'file', 'a_directory', 'not ')).rejects.toThrow(
-            `file 'a_directory' exists: expected { isFile: [Function isFile] } to be null`
+            `file 'a_directory' exists: expected { isFile: [Function isFile] } to be undefined`
         )
         expect(getFileInfoStub.calledWithExactly('test-cwd', 'a_directory')).toBeTruthy()
 
@@ -167,7 +167,7 @@ describe('extensions > file_system > file_system.steps', () => {
             .withArgs('test-cwd', 'directory_exist')
             .resolves({ isDirectory: () => true })
         getFileInfoStub.withArgs('test-cwd', 'a_file').resolves({ isDirectory: () => false })
-        getFileInfoStub.withArgs('test-cwd', 'directory_dont_exist').resolves(null)
+        getFileInfoStub.withArgs('test-cwd', 'directory_dont_exist').resolves(undefined)
 
         const world = {
             cli: { getCwd: getCwdStub },
@@ -187,7 +187,7 @@ describe('extensions > file_system > file_system.steps', () => {
         await expect(
             def.exec(world, 'directory', 'directory_dont_exist', undefined)
         ).rejects.toThrow(
-            `directory 'directory_dont_exist' does not exist: expected null not to be null`
+            `directory 'directory_dont_exist' does not exist: expected undefined not to be undefined`
         )
         expect(getFileInfoStub.calledWithExactly('test-cwd', 'directory_dont_exist')).toBeTruthy()
     })
@@ -201,7 +201,7 @@ describe('extensions > file_system > file_system.steps', () => {
             .withArgs('test-cwd', 'directory_exist')
             .resolves({ isDirectory: () => true })
         getFileInfoStub.withArgs('test-cwd', 'a_file').resolves({ isDirectory: () => false })
-        getFileInfoStub.withArgs('test-cwd', 'directory_dont_exist').resolves(null)
+        getFileInfoStub.withArgs('test-cwd', 'directory_dont_exist').resolves(undefined)
 
         const world = {
             cli: { getCwd: getCwdStub },
@@ -211,12 +211,12 @@ describe('extensions > file_system > file_system.steps', () => {
         expect.assertions(5)
 
         await expect(def.exec(world, 'directory', 'directory_exist', 'not ')).rejects.toThrow(
-            `directory 'directory_exist' exists: expected { isDirectory: [Function isDirectory] } to be null`
+            `directory 'directory_exist' exists: expected { isDirectory: [Function isDirectory] } to be undefined`
         )
         expect(getFileInfoStub.calledWithExactly('test-cwd', 'directory_exist')).toBeTruthy()
 
         await expect(def.exec(world, 'directory', 'a_file', 'not ')).rejects.toThrow(
-            `directory 'a_file' exists: expected { isDirectory: [Function isDirectory] } to be null`
+            `directory 'a_file' exists: expected { isDirectory: [Function isDirectory] } to be undefined`
         )
         expect(getFileInfoStub.calledWithExactly('test-cwd', 'a_file')).toBeTruthy()
 

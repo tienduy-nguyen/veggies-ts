@@ -23,6 +23,7 @@ export const scenarioRegex = /^[\s]*Scenario:[\s]*(.*[^\s])[\s]*$/
  * @return {Array<string>} - Scenarios names
  */
 export const extractScenarios = (file?: string): Scenario[] => {
+    console.log('extractScenarios', file)
     if (!file) throw new TypeError(`Invalid feature file ${file}`)
 
     const content = fileSystem.getFileContent(file)

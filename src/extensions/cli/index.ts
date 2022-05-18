@@ -17,9 +17,9 @@ import * as cliSteps from './cli.steps'
 export class Cli {
     public cwd: string
     public env: Record<string, string>
-    public killSignal: number | NodeJS.Signals | null
+    public killSignal: number | NodeJS.Signals | undefined
     public killDelay: number
-    public exitCode: number | null
+    public exitCode: number | undefined
     public stdout: string
     public stderr: string
 
@@ -27,9 +27,9 @@ export class Cli {
     private constructor() {
         this.cwd = process.cwd()
         this.env = {}
-        this.killSignal = null
+        this.killSignal = undefined
         this.killDelay = 0
-        this.exitCode = null
+        this.exitCode = undefined
         this.stdout = ''
         this.stderr = ''
     }
@@ -90,7 +90,7 @@ export class Cli {
      *
      * @return {number} The exit code
      */
-    getExitCode(): number | null {
+    getExitCode(): number | undefined {
         return this.exitCode
     }
 
@@ -113,7 +113,7 @@ export class Cli {
      * - CWD is reset to current process CWD
      * - environment variables
      * - killDelay & killSignal are disabled
-     * - exitCode is set to null
+     * - exitCode is set to undefined
      * - stdout is set to an empty string
      * - stderr is set to an empty string
      */
@@ -121,8 +121,8 @@ export class Cli {
         this.cwd = process.cwd()
         this.env = {}
         this.killDelay = 0
-        this.killSignal = null
-        this.exitCode = null
+        this.killSignal = undefined
+        this.exitCode = undefined
         this.stdout = ''
         this.stderr = ''
     }
@@ -146,7 +146,7 @@ export class Cli {
 
             let killer: NodeJS.Timeout | undefined
             let killed = false
-            if (this.killSignal !== null) {
+            if (this.killSignal !== undefined) {
                 killer = setTimeout(() => {
                     cmd.kill(this.killSignal ?? undefined)
                     killed = true
@@ -174,7 +174,7 @@ export class Cli {
                     }
                 }
 
-                this.exitCode = code
+                this.exitCode = code ?? undefined
 
                 this.stdout = Buffer.concat(cmdStdout).toString()
                 this.stderr = Buffer.concat(cmdStderr).toString()

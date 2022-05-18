@@ -9,13 +9,13 @@ import {
     snapshot, VeggiesWorld,
 } from "../../lib"
 
-setWorldConstructor(function (_this: VeggiesWorld) {
-    state.extendWorld(_this)
-    fixtures.extendWorld(_this)
-    httpApi.extendWorld(_this)
-    cli.extendWorld(_this)
-    fileSystem.extendWorld(_this)
-    snapshot.extendWorld(_this)
+setWorldConstructor(function (this: VeggiesWorld) {
+    state.extendWorld(this)
+    fixtures.extendWorld(this)
+    httpApi.extendWorld(this)
+    cli.extendWorld(this)
+    fileSystem.extendWorld(this)
+    snapshot.extendWorld(this)
 })
 
 state.install()

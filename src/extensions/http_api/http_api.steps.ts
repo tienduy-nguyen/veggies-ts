@@ -32,6 +32,7 @@ export function install({ baseUrl = '' } = {}): void {
      */
     Given(/^(?:I )?set request headers$/, function (this: VeggiesWorld, step: DataTable) {
         const headers = Cast.object(this.state?.populateObject(step.rowsHash()))
+        expect(headers, 'No headers available').to.not.be.undefined
         if (headers) this.httpApi?.setHeaders(headers)
     })
 
@@ -81,6 +82,7 @@ export function install({ baseUrl = '' } = {}): void {
      */
     Given(/^(?:I )?set request json body$/, function (this: VeggiesWorld, step: DataTable) {
         const body = Cast.object(this.state?.populateObject(step.rowsHash()))
+        expect(body, 'No body available').to.not.be.undefined
         if (body) this.httpApi?.setJsonBody(body)
     })
 
@@ -101,6 +103,7 @@ export function install({ baseUrl = '' } = {}): void {
      */
     Given(/^(?:I )?set request form body$/, function (this: VeggiesWorld, step: DataTable) {
         const body = Cast.object(this.state?.populateObject(step.rowsHash()))
+        expect(body, 'No body available').to.not.be.undefined
         if (body) this.httpApi?.setFormBody(body)
     })
 
@@ -140,6 +143,7 @@ export function install({ baseUrl = '' } = {}): void {
      */
     Given(/^(?:I )?set request query$/, function (this: VeggiesWorld, step: DataTable) {
         const query = Cast.object(this.state?.populateObject(step.rowsHash()))
+        expect(query, 'No query available').to.not.be.undefined
         if (query) this.httpApi?.setQuery(query)
     })
 
