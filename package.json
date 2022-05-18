@@ -48,9 +48,10 @@
     },
     "engineStrict": true,
     "dependencies": {
+        "@cucumber/cucumber": "8.2.1",
         "arg": "5.0.1",
         "chai": "4.3.6",
-        "dayjs": "^1.11.2",
+        "dayjs": "1.11.2",
         "fast-glob": "3.2.11",
         "fs-extra": "10.1.0",
         "jest-diff": "28.1.0",
@@ -63,7 +64,6 @@
     },
     "devDependencies": {
         "@commitlint/config-conventional": "^17.0.0",
-        "@cucumber/cucumber": "8.2.1",
         "@swc/core": "^1.2.186",
         "@swc/jest": "^0.2.21",
         "@types/chai": "4.3.1",
@@ -97,9 +97,6 @@
         "sinon": "^14.0.0",
         "ts-node": "^10.7.0",
         "typescript": "^4.6.4"
-    },
-    "peerDependencies": {
-        "@cucumber/cucumber": ">=7.0.0"
     },
     "scripts": {
         "build": "tsc --build tsconfig.lib.json && cp src/importer.js lib/ && cp src/wrapper.mjs lib/",

@@ -3012,7 +3012,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.2":
+"dayjs@npm:1.11.2":
   version: 1.11.2
   resolution: "dayjs@npm:1.11.2"
   checksum: 78f8bd04a9e5f5554aa06eacda65a7d59e162d39f621a46fd34fb3b51367c3662426d86b4e2f4ac535f81e0c4d5af3e8a83b37e672412eb556267d726c61f8f3
@@ -8012,7 +8012,7 @@ __metadata:
     commitlint: ^17.0.0
     conventional-changelog-cli: ^2.2.2
     coveralls: ^3.1.1
-    dayjs: ^1.11.2
+    dayjs: 1.11.2
     eslint: ^8.15.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-import: ^2.26.0
@@ -8036,8 +8036,6 @@ __metadata:
     tough-cookie: 4.0.0
     ts-node: ^10.7.0
     typescript: ^4.6.4
-  peerDependencies:
-    "@cucumber/cucumber": ">=7.0.0"
   bin:
     veggies: ./bin/veggies.js
   languageName: unknown
