@@ -5,6 +5,7 @@ import * as utils from './utils'
 import * as clean from './clean'
 import * as statistics from './statistics'
 import * as assertions from '../../core/assertions'
+import * as cmdOptions from './cmdOptions'
 import { SnapshotContents, SnapshotOptions } from './snapshot_types'
 import { ObjectFieldSpec } from '../../core/core_types'
 
@@ -29,8 +30,8 @@ export class Snapshot {
         this.reset(options)
     }
 
-    public static getInstance(options: SnapshotOptions = {}): Snapshot {
-        return this._instance || (this._instance = new this(options))
+    public static getInstance(): Snapshot {
+        return this._instance || (this._instance = new this({ ...cmdOptions }))
     }
 
     /**
@@ -56,7 +57,7 @@ export class Snapshot {
     /**
      * Resets snapshot:
      */
-    reset(options: SnapshotOptions = {}): void {
+    reset(options: SnapshotOptions): void {
         this.options = options || {}
         this.shouldUpdate = options.updateSnapshots ?? false
         this.cleanSnapshots = options.cleanSnapshots ?? false

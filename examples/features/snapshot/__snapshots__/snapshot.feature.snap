@@ -1,18 +1,18 @@
 
 
-exports[`Snapshot testing on a cli with json output 1.1`] = `Object {
+exports[`Snapshot testing on a cli with json output 1.5`] = `Object {
   "gender": "equal(male)",
   "name": "john",
 }`;
 
-exports[`Snapshot testing on a json api 1.1`] = `Object {
+exports[`Snapshot testing on a json api 1.4`] = `Object {
   "first_name": "Raphaël",
   "gender": "type(string)",
   "id": 1,
   "last_name": "Benitte",
 }`;
 
-exports[`Snapshot testing on a json file 1.1`] = `Object {
+exports[`Snapshot testing on a json file 1.6`] = `Object {
   "first_name": "Raphaël",
   "gender": "type(string)",
   "id": "type(number)",
@@ -26,10 +26,10 @@ exports[`Snapshot testing on an api 1.1`] = `Object {
   "last_name": "Benitte",
 }`;
 
-exports[`Snapshot testing on cli 1.1`] = `"test
+exports[`Snapshot testing on cli 1.2`] = `"test
 "`;
 
-exports[`Snapshot testing on files 1.1`] = `"id:         1
+exports[`Snapshot testing on files 1.3`] = `"id:         1
 first_name: Raphaël
 last_name:  Benitte
 gender:     male

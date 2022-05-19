@@ -323,7 +323,7 @@ describe('extensions > http_api > http_api.steps', () => {
         const context = helper.getContext() // Extension context
 
         const def = context.getDefinitionByMatcher(
-            'replace(?: placeholder)? (.+) in (.+) to ([^\\s]+)(?: with regex options? (.+)?)?'
+            'replace(?: placeholder)? (.+) in (.+) to (\\S+)(?: with regex options? (.+)?)?'
         )
         def.shouldNotMatch('replace key {token} in URLPage to')
         def.shouldNotMatch('I replace {token} in URLPage to   ')
