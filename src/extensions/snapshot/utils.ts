@@ -15,7 +15,7 @@ const EXPECTED_COLOR = chalk.green
 const RECEIVED_COLOR = chalk.red
 const JEST_NO_DIFF_MESSAGE = 'Compared values have no visual difference.'
 
-export const scenarioRegex = /^[\s]*Scenario:[\s]*(.*[^\s])[\s]*$/
+export const scenarioRegex = /^\s*Scenario:\s*(.*\S)\s*$/
 
 /**
  * Extract scenarios from a feature file

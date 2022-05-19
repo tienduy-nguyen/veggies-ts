@@ -64,7 +64,7 @@ export function install({ baseUrl = '' } = {}): void {
      * Setting a single http header
      */
     Given(
-        /^(?:I )?set ([a-zA-Z0-9-_]+) request header to (.+)$/,
+        /^(?:I )?set ([a-zA-Z\d-_]+) request header to (.+)$/,
         function (this: VeggiesWorld, key: string, value: string) {
             this.httpApi?.setHeader(key, Cast.value(this.state?.populate(value)))
         }
@@ -164,7 +164,7 @@ export function install({ baseUrl = '' } = {}): void {
      * Replace placeholder of url
      */
     Given(
-        /^(?:I )?replace(?: placeholder)? (.+) in (.+) to ([^\s]+)(?: with regex options? (.+)?)?$/,
+        /^(?:I )?replace(?: placeholder)? (.+) in (.+) to (\S+)(?: with regex options? (.+)?)?$/,
         function (
             this: VeggiesWorld,
             search: string,
