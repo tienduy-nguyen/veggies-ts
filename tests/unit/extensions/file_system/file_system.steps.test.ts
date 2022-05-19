@@ -2,11 +2,10 @@ import { createSandbox, SinonStub, stub } from 'sinon'
 
 import * as helper from '../definitions_helper'
 import * as fileSystemSteps from '../../../../src/extensions/file_system/file_system.steps'
+import * as fileSystem from '../../../../src/extensions/file_system/file_system'
 import { Cli } from '../../../../src/extensions/cli/cli'
-import { FileSystem } from '../../../../src/extensions/file_system/file_system'
 
 const cli = Cli.getInstance()
-const fileSystem = FileSystem.getInstance()
 
 describe('extensions > file_system > file_system.steps', () => {
     const sandbox = createSandbox()

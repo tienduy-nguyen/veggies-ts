@@ -1,6 +1,10 @@
+'use strict'
+
 /**
  * @module extensions/httpApi
  */
+
+const definitions = require('../../extensions/http_api/http_api.steps')
 
 /**
  * Extends cucumber world object.
@@ -10,7 +14,7 @@
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, httpApi } = require('veggies-ts')
+ * const { state, httpApi } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // httpApi extension requires state extension
@@ -20,8 +24,7 @@
  * @function
  * @param {Object} world - The cucumber world object
  */
-import extendWorld = require('./extend_world')
-export { extendWorld }
+exports.extendWorld = require('./extend_world')
 
 /**
  * The http API configuration object.
@@ -37,21 +40,18 @@ export { extendWorld }
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, httpApi } = require('veggies-ts')
+ * const { state, httpApi } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // httpApi extension requires state extension
  *     httpApi.extendWorld(this)
  * })
- * // install definitions steps
+ *
  * state.install()
  * httpApi.install({ baseUrl: 'http://localhost:3000' })
  *
- * @param {baseUrl} string
+ * @param {HttpApiConfig} config - Http global conf
  */
-import httpApiSteps = require('./http_api.steps')
-export function install({ baseUrl = '' } = {}): void {
-    httpApiSteps.install({
-        baseUrl,
-    })
+exports.install = ({ baseUrl = '' } = {}) => {
+    definitions.install({ baseUrl })
 }

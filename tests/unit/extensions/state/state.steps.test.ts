@@ -1,7 +1,7 @@
 import * as helper from '../definitions_helper'
 import { createSandbox, SinonStub } from 'sinon'
-import { install } from '../../../../src/extensions/state'
 import { State } from '../../../../src/extensions/state/state'
+import * as stateSteps from '../../../../src/extensions/state/state.steps'
 
 const state = State.getInstance()
 describe('extensions > state > definitions', () => {
@@ -14,7 +14,7 @@ describe('extensions > state > definitions', () => {
         dumpStateStub = sandbox.stub(state, 'dump')
         sandbox.stub(console, 'log')
     })
-    beforeEach(() => install())
+    beforeEach(() => stateSteps.install())
 
     afterEach(() => {
         sandbox.reset()

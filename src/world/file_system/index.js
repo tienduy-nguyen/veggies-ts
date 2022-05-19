@@ -1,6 +1,10 @@
+'use strict'
+
 /**
  * @module extensions/FileSystem
  */
+
+const definitions = require('../../extensions/file_system/file_system.steps')
 
 /**
  * Extends cucumber world object.
@@ -10,7 +14,7 @@
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli, fileSystem } = require('veggies-ts')
+ * const { state, cli, fileSystem } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -21,8 +25,7 @@
  * @function
  * @param {Object} world - The cucumber world object
  */
-import extendWorld = require('./extend_world')
-export { extendWorld }
+exports.extendWorld = require('./extend_world')
 
 /**
  * Installs the extension.
@@ -31,21 +34,18 @@ export { extendWorld }
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli, fileSystem } = require('veggies-ts')
+ * const { state, cli, fileSystem } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this) // fileSystem extension requires cli extension
  *     fileSystem.extendWorld(this)
- *
  * })
- * // install definition steps
- *  state.install()
- *  cli.install()
- *  fileSystem.install()
  *
+ * state.install()
+ * cli.install()
+ * fileSystem.install()
  */
-import fileSystemSteps = require('./file_system.steps')
-export function install(): void {
-    fileSystemSteps.install()
+exports.install = () => {
+    definitions.install()
 }

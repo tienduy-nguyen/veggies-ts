@@ -1,6 +1,6 @@
 {
     "name": "veggies-ts",
-    "version": "0.0.13",
+    "version": "0.0.16",
     "description": "Veggies is an awesome cucumber-js library for API/CLI testing. Great for testing APIs built upon Express, Koa, HAPI and others.",
     "tags": [
         "bdd",
@@ -88,7 +88,7 @@
         "typescript": "^4.6.4"
     },
     "scripts": {
-        "build": "tsc --build tsconfig.lib.json",
+        "build": "tsc --build tsconfig.lib.json && cp src/index.js lib/index.js  && cp src/index.d.ts lib/index.d.ts && cp -R src/world lib/world",
         "prepublishOnly": "rm -rf lib && yarn build",
         "test": "jest --verbose --colors tests",
         "test-cover": "jest --verbose --colors --coverage",

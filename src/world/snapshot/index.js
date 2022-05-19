@@ -1,6 +1,11 @@
+'use strict'
+
 /**
  * @module extensions/snapshot
  */
+
+const definitions = require('../../extensions/snapshot/snapshot.steps')
+const hooks = require('../../extensions/snapshot/hooks')
 
 /**
  * Extends cucumber world object.
@@ -10,7 +15,7 @@
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { snapshot } = require('veggies-ts')
+ * const { snapshot } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
@@ -19,8 +24,7 @@
  * @function
  * @param {Object} world - The cucumber world object
  */
-import extendWorld = require('./extend_world')
-export { extendWorld }
+exports.extendWorld = require('./extend_world')
 
 /**
  * Installs the extension.
@@ -29,18 +33,15 @@ export { extendWorld }
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { snapshot } = require('veggies-ts')
+ * const { snapshot } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     snapshot.extendWorld(this)
  * })
- * // install definitions
- * snapshot.install(this)
  *
+ * snapshot.install()
  */
-import snapshotSteps = require('./snapshot.steps')
-import hooks = require('./hooks')
-export function install(): void {
+exports.install = () => {
     hooks.install()
-    snapshotSteps.install()
+    definitions.install()
 }

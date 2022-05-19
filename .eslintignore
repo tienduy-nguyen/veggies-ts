@@ -2,4 +2,4 @@
 /doc/*
 /_doc/*
 /lib/*
-/src/importer.js
+/src/**/*.js

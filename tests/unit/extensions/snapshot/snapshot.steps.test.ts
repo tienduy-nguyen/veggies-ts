@@ -4,12 +4,11 @@ import { createSandbox, SinonStub } from 'sinon'
 import { Snapshot } from '../../../../src/extensions/snapshot/snapshot'
 import { Cli } from '../../../../src/extensions/cli/cli'
 import { HttpApi } from '../../../../src/extensions/http_api/http_api'
-import { FileSystem } from '../../../../src/extensions/file_system/file_system'
+import * as fileSystem from '../../../../src/extensions/file_system/file_system'
 
 const snapshot = Snapshot.getInstance()
 const cli = Cli.getInstance()
 const httpApi = HttpApi.getInstance()
-const fileSystem = FileSystem.getInstance()
 
 describe('extensions > snapshot > snapshot.steps', () => {
     const sandbox = createSandbox()

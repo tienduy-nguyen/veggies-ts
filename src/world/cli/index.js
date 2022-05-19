@@ -1,6 +1,10 @@
+'use strict'
+
 /**
  * @module extensions/Cli
  */
+
+const definitions = require('../../extensions/cli/cli.steps')
 
 /**
  * Extends cucumber world object.
@@ -10,7 +14,7 @@
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli } = require('veggies-ts')
+ * const { state, cli } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
@@ -20,8 +24,7 @@
  * @function
  * @param {Object} world - The cucumber world object
  */
-import extendWorld = require('./extend_world')
-export { extendWorld }
+exports.extendWorld = require('./extend_world')
 
 /**
  * Installs the extension.
@@ -30,19 +33,16 @@ export { extendWorld }
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state, cli } = require('veggies-ts')
+ * const { state, cli } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
  *     state.extendWorld(this) // cli extension requires state extension
  *     cli.extendWorld(this)
- *
  * })
- * // install definition steps
+ *
  * state.install()
  * cli.install()
- *
  */
-import cliSteps = require('./cli.steps')
-export function install(): void {
-    cliSteps.install()
+exports.install = () => {
+    definitions.install()
 }

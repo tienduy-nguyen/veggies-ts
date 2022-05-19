@@ -1,6 +1,10 @@
+'use strict'
+
 /**
- * @module extensions/state
+ * @module extensions/fixtures
  */
+
+const hooks = require('../../extensions/fixtures/hook')
 
 /**
  * Extends cucumber world object.
@@ -10,17 +14,16 @@
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state } = require('veggies-ts')
+ * const { fixtures } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
- *     state.extendWorld(this)
+ *     fixtures.extendWorld(this)
  * })
  *
  * @function
  * @param {Object} world - The cucumber world object
  */
-import extendWorld = require('./extend_world')
-export { extendWorld }
+exports.extendWorld = require('./extend_world')
 
 /**
  * Installs the extension.
@@ -29,17 +32,14 @@ export { extendWorld }
  * // /support/world.js
  *
  * const { setWorldConstructor } = require('@cucumber/cucumber')
- * const { state } = require('veggies-ts')
+ * const { fixtures } = require('@ekino/veggies')
  *
  * setWorldConstructor(function() {
- *     state.extendWorld(this)
- *
- *     // install definitions steps
- *     state.install(this)
+ *     fixtures.extendWorld(this)
  * })
  *
+ * fixtures.install(defineSupportCode)
  */
-import stateSteps = require('./state.steps')
-export function install(): void {
-    stateSteps.install()
+exports.install = () => {
+    hooks.install()
 }
